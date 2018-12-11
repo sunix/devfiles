@@ -1,2 +1,2 @@
 # devfiles
-Various devfiles and factory configuration I use in Eclipse Che
+Various devfiles and factory configurations I use in Eclipse Che
