@@ -1,0 +1,143 @@
+{
+  "v": "4.0",
+  "name": "chetheia_builder",
+  "workspace": {
+    "defaultEnv": "default",
+    "environments": {
+      "default": {
+        "machines": {
+          "ws/git": {
+            "attributes": {},
+            "servers": {},
+            "volumes": {
+              "projects": {
+                "path": "/projects"
+              }
+            },
+            "installers": [],
+            "env": {}
+          },
+          "ws/dev": {
+            "attributes": {},
+            "servers": {},
+            "volumes": {
+              "projects": {
+                "path": "/projects"
+              }
+            },
+            "installers": [],
+            "env": {}
+          }
+        },
+        "recipe": {
+          "type": "kubernetes",
+          "content": "kind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     image: eclipse/che-theia-dev:nightly\n     name: dev\n     resources:\n      limits:\n       memory: 2560Mi\n    - \n     image: sunix/git-devtools\n     name: git\n     resources:\n      limits:\n       memory: 921.6000003814697Mi\n",
+          "contentType": "application/x-yaml"
+        }
+      }
+    },
+    "projects": [
+      {
+        "links": [],
+        "name": "theia",
+        "attributes": {},
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/theia-ide/theia.git",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/theia",
+        "description": "",
+        "problems": [],
+        "mixins": []
+      },
+      {
+        "links": [],
+        "name": "che",
+        "attributes": {},
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/sunix/che.git",
+          "type": "git",
+          "parameters": {
+            "branch": "chetheiabuild"
+          }
+        },
+        "path": "/che",
+        "description": "",
+        "problems": [],
+        "mixins": []
+      },
+      {
+        "links": [],
+        "name": "che-theia-factory-extension",
+        "attributes": {},
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/eclipse/che-theia-factory-extension.git",
+          "type": "git",
+          "parameters": {
+            "branch": "WIP-test"
+          }
+        },
+        "path": "/che-theia-factory-extension",
+        "description": "",
+        "problems": [],
+        "mixins": []
+      },
+      {
+        "links": [],
+        "name": "theia-plugin-packager",
+        "attributes": {},
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/eclipse/theia-plugin-packager.git",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/theia-plugin-packager",
+        "description": "",
+        "problems": [],
+        "mixins": []
+      }
+    ],
+    "name": "chetheia_builder",
+    "attributes": {
+      "editor": "org.eclipse.che.editor.theia:1.0.0",
+      "persistVolumes": "false",
+      "plugins": "che-machine-exec-plugin:0.0.1"
+    },
+    "commands": [
+      {
+        "commandLine": "echo ${CHE_OSO_CLUSTER//api/console}",
+        "name": "Get OpenShift Console URL",
+        "attributes": {},
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects/che-theia-factory-extension/ && yarn && yarn test-watch",
+        "name": "yarn test-watch",
+        "attributes": {
+          "previewUrl": "",
+          "goal": "Build",
+          "machineName": "ws/dev"
+        },
+        "type": "custom"
+      }
+    ],
+    "links": []
+  },
+  "ide": {
+    "onProjectsLoaded": {
+      "actions": [
+        {
+          "properties": {
+            "name": "yarn test-watch"
+          },
+          "id": "runCommand"
+        }
+      ]
+    }
+  }
+}
