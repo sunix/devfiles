@@ -7,7 +7,9 @@
       "default": {
         "machines": {
           "ws/git": {
-            "attributes": {},
+            "attributes": {
+              "memoryLimitBytes": "322122547"
+            },
             "servers": {},
             "volumes": {
               "projects": {
@@ -18,8 +20,16 @@
             "env": {}
           },
           "ws/dev": {
-            "attributes": {},
-            "servers": {},
+            "attributes": {
+              "memoryLimitBytes": "3221225472"
+            },
+            "servers": {
+              "che-theia-dev": {
+                "attributes": {},
+                "port": "3130",
+                "protocol": "http"
+              }
+            },
             "volumes": {
               "projects": {
                 "path": "/projects"
@@ -31,7 +41,7 @@
         },
         "recipe": {
           "type": "kubernetes",
-          "content": "kind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     image: eclipse/che-theia-dev:nightly\n     name: dev\n     resources:\n      limits:\n       memory: 2560Mi\n    - \n     image: sunix/git-devtools\n     name: git\n     resources:\n      limits:\n       memory: 921.6000003814697Mi\n",
+          "content": "kind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     image: 'sunix/che-theia-dev:nightly'\n     name: dev\n     resources:\n      limits:\n       memory: 3072Mi\n    - \n     image: sunix/git-devtools\n     name: git\n     resources:\n      limits:\n       memory: 307.19999980926514Mi\n",
           "contentType": "application/x-yaml"
         }
       }
@@ -98,14 +108,13 @@
         },
         "path": "/theia-plugin-packager",
         "description": "",
-        "problems": [],
-        "mixins": []
+        "mixins": [],
+        "problems": []
       }
     ],
     "name": "chetheia_builder",
     "attributes": {
       "editor": "org.eclipse.che.editor.theia:1.0.0",
-      "persistVolumes": "false",
       "plugins": "che-machine-exec-plugin:0.0.1"
     },
     "commands": [
@@ -120,6 +129,16 @@
         "name": "yarn test-watch",
         "attributes": {
           "previewUrl": "",
+          "goal": "Build",
+          "machineName": "ws/dev"
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia || true && mkdir -p /projects/theiadev_projects && export CHE_PROJECTS_ROOT=/projects/theiadev_projects && export HOSTED_PLUGIN=/projects/che-theia-factory-extension/ && cd /projects/theia/examples/assembly && export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr && yarn start /projects/theiadev_projects --hostname=0.0.0.0 --port=3130",
+        "name": "yarn start",
+        "attributes": {
+          "previewUrl": "${server.che-theia-dev}",
           "goal": "Build",
           "machineName": "ws/dev"
         },
