@@ -1,0 +1,128 @@
+{
+  "v": "4.0",
+  "name": "nodejs-weather-app",
+  "workspace": {
+    "defaultEnv": "default",
+    "environments": {
+      "default": {
+        "machines": {
+          "ws/dev": {
+            "attributes": {
+              "memoryLimitBytes": "536870912"
+            },
+            "servers": {
+              "nodejs": {
+                "attributes": {},
+                "port": "3001",
+                "protocol": "http"
+              }
+            },
+            "volumes": {
+              "projects": {
+                "path": "/projects"
+              }
+            },
+            "installers": [],
+            "env": {}
+          }
+        },
+        "recipe": {
+          "type": "kubernetes",
+          "content": "kind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     image: wsskeleton/che-plugin-dev-tooling\n     name: dev\n     resources:\n      limits:\n       memory: 512Mi\n",
+          "contentType": "application/x-yaml"
+        }
+      }
+    },
+    "projects": [
+      {
+        "links": [],
+        "name": "simple-nodejs-weather-app",
+        "attributes": {},
+        "type": "blank",
+        "source": {
+          "location": "https://github.com/bmorelli25/simple-nodejs-weather-app",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/simple-nodejs-weather-app",
+        "description": "",
+        "problems": [],
+        "mixins": []
+      }
+    ],
+    "name": "simple-nodejs-weather-app",
+    "attributes": {
+      "editor": "org.eclipse.che.editor.theia:1.0.0",
+      "plugins": "che-machine-exec-plugin:0.0.1"
+    },
+    "commands": [
+      {
+        "commandLine": "kill $(pgrep node | head -n 1)",
+        "name": "Stop",
+        "attributes": {
+          "machineName": "ws/dev"
+        },
+        "type": "che"
+      },
+      {
+        "commandLine": "cd /projects/simple-nodejs-weather-app && sed -i 's/3000/3001/g' server.js && node --inspect server.js",
+        "name": "Run (Debug Mode)",
+        "attributes": {
+          "previewUrl": "${server.nodejs}",
+          "goal": "Run",
+          "machineName": "ws/dev"
+        },
+        "type": "che"
+      },
+      {
+        "commandLine": "cd /projects/simple-nodejs-weather-app && yarn",
+        "name": "Build",
+        "attributes": {
+          "machineName": "ws/dev"
+        },
+        "type": "che"
+      },
+      {
+        "commandLine": "cd /projects/simple-nodejs-weather-app && sed -i 's/3000/3001/g' server.js && yarn run start",
+        "name": "Run",
+        "attributes": {
+          "previewUrl": "${server.nodejs}",
+          "goal": "Run",
+          "machineName": "ws/dev"
+        },
+        "type": "che"
+      },
+      {
+        "commandLine": "cd /projects/simple-nodejs-weather-app && sed -i 's/3000/3001/g' server.js && yarn && yarn run start",
+        "name": "Build and Run",
+        "attributes": {
+          "previewUrl": "${server.nodejs}",
+          "goal": "Run",
+          "machineName": "ws/dev"
+        },
+        "type": "che"
+      },
+      {
+        "commandLine": "echo ${CHE_OSO_CLUSTER//api/console}",
+        "name": "Get OpenShift Console URL",
+        "attributes": {
+          "machineName": "ws/theia"
+        },
+        "type": "custom"
+      }
+    ],
+    "links": []
+  },
+  "ide": {
+    "onProjectsLoaded": {
+      "actions": [
+        {
+          "properties": {
+            "name": "Build and Run"
+          },
+          "id": "runCommand"
+        }
+      ]
+    }
+  }
+}
