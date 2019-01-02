@@ -41,7 +41,7 @@
         },
         "recipe": {
           "type": "kubernetes",
-          "content": "kind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     image: 'sunix/che-theia-dev:nightly'\n     name: dev\n     resources:\n      limits:\n       memory: 3072Mi\n    - \n     image: sunix/git-devtools\n     name: git\n     resources:\n      limits:\n       memory: 307.19999980926514Mi\n",
+          "content": "kind: List\nitems:\n - \n  apiVersion: v1\n  kind: Pod\n  metadata:\n   name: ws\n  spec:\n   containers:\n    - \n     image: 'eclipse/che-theia-dev:nightly'\n     name: dev\n     resources:\n      limits:\n       memory: 3072Mi\n    - \n     image: sunix/git-devtools\n     name: git\n     resources:\n      limits:\n       memory: 307.19999980926514Mi\n",
           "contentType": "application/x-yaml"
         }
       }
