@@ -111,6 +111,15 @@
         "type": "custom"
       },
       {
+        "commandLine": "cd /projects/theia/ && rm che/ -rf && rm packages/@che* && git fetch --all && git reset --hard origin/master",
+        "name": "cleanup che:theia init",
+        "attributes": {
+          "machineName": "ws/dev",
+          "goal": "Build"
+        },
+        "type": "custom"
+      },
+      {
         "commandLine": "cd /projects/theia/ && jq .command.run.concurrency=1 lerna.json  > lerna.json.tmp && mv lerna.json.tmp lerna.json && yarn",
         "name": "theia build (concurrency=1)",
         "attributes": {
