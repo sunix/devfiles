@@ -111,7 +111,7 @@
         "type": "custom"
       },
       {
-        "commandLine": "cd /projects/theia/ && rm che/ -rf && rm packages/@che* && git fetch --all && git reset --hard origin/master",
+        "commandLine": "cd /projects/theia/ && rm che/ -rf && rm packages/@che* && rm examples/assembly/ -rf && git fetch --all && git reset --hard origin/master",
         "name": "cleanup che:theia init",
         "attributes": {
           "machineName": "ws/dev",
