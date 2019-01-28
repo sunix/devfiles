@@ -55,7 +55,9 @@
         "source": {
           "location": "https://github.com/theia-ide/theia.git",
           "type": "git",
-          "parameters": {}
+          "parameters": {
+            "branch": "master"
+          }
         },
         "path": "/theia",
         "description": "",
@@ -64,17 +66,17 @@
       },
       {
         "links": [],
-        "name": "che-theia-factory-extension",
+        "name": "che-theia",
         "attributes": {},
         "type": "blank",
         "source": {
-          "location": "https://github.com/eclipse/che-theia-factory-extension.git",
+          "location": "https://github.com/eclipse/che-theia.git",
           "type": "git",
           "parameters": {
-            "branch": "master"
+            "branch": "che-12006-sync-projects-workspace"
           }
         },
-        "path": "/che-theia-factory-extension",
+        "path": "/che-theia",
         "description": "",
         "mixins": [],
         "problems": []
@@ -93,8 +95,8 @@
         "type": "custom"
       },
       {
-        "commandLine": "cd /projects/che-theia-factory-extension/ && yarn && yarn test-watch",
-        "name": "che-theia-factory yarn test-watch",
+        "commandLine": "cd /projects/che-theia/plugins/factory-plugin/ && yarn",
+        "name": "factory-plugin yarn",
         "attributes": {
           "machineName": "ws/dev",
           "goal": "Build"
@@ -102,7 +104,16 @@
         "type": "custom"
       },
       {
-        "commandLine": "cd /projects/theia/ && che:theia init",
+        "commandLine": "cd /projects/che-theia/plugins/factory-plugin/ && yarn && yarn test-watch",
+        "name": "factory-plugin yarn test-watch",
+        "attributes": {
+          "machineName": "ws/dev",
+          "goal": "Build"
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects/theia/ && git reset --hard v0.3.18 && che:theia init",
         "name": "che:theia init",
         "attributes": {
           "machineName": "ws/dev",
@@ -129,7 +140,7 @@
         "type": "custom"
       },
       {
-        "commandLine": "rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia || true && mkdir -p /projects/theiadev_projects && export CHE_PROJECTS_ROOT=/projects/theiadev_projects && export HOSTED_PLUGIN=/projects/che-theia-factory-extension/ && cd /projects/theia/examples/assembly && export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr && yarn start /projects/theiadev_projects --hostname=0.0.0.0 --port=3130",
+        "commandLine": "rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia || true && mkdir -p /projects/theiadev_projects && export CHE_PROJECTS_ROOT=/projects/theiadev_projects && export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ && cd /projects/theia/examples/assembly && export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr && yarn start /projects/theiadev_projects --hostname=0.0.0.0 --port=3130",
         "name": "yarn start with che-theia-factory",
         "attributes": {
           "previewUrl": "${server.che-theia-dev}",
@@ -146,7 +157,7 @@
       "actions": [
         {
           "properties": {
-            "name": "yarn test-watch"
+            "name": "factory-plugin yarn test-watch"
           },
           "id": "runCommand"
         },
