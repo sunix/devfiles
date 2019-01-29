@@ -173,7 +173,7 @@
         },
         {
           "properties": {
-            "file": "theia/README.md"
+            "file": "devfiles/che-in-che/factory-che-theia-builder.md"
           },
           "id": "openFile"
         }
