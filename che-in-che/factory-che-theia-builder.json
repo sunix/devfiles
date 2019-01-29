@@ -80,6 +80,22 @@
         "description": "",
         "mixins": [],
         "problems": []
+      },
+      {
+        "links": [],
+        "name": "devfiles",
+        "attributes": {},
+        "source": {
+          "location": "https://github.com/sunix/devfiles.git",
+          "type": "git",
+          "parameters": {
+            "branch": "master"
+          }
+        },
+        "path": "/devfiles",
+        "description": "",
+        "mixins": [],
+        "problems": []
       }
     ],
     "name": "chetheia_builder",
@@ -89,32 +105,8 @@
     },
     "commands": [
       {
-        "commandLine": "echo ${CHE_OSO_CLUSTER//api/console}",
-        "name": "Get OpenShift Console URL",
-        "attributes": {},
-        "type": "custom"
-      },
-      {
-        "commandLine": "cd /projects/che-theia/plugins/factory-plugin/ && yarn",
-        "name": "factory-plugin yarn",
-        "attributes": {
-          "machineName": "ws/dev",
-          "goal": "Build"
-        },
-        "type": "custom"
-      },
-      {
-        "commandLine": "cd /projects/che-theia/plugins/factory-plugin/ && yarn && yarn test-watch",
-        "name": "factory-plugin yarn test-watch",
-        "attributes": {
-          "machineName": "ws/dev",
-          "goal": "Build"
-        },
-        "type": "custom"
-      },
-      {
         "commandLine": "cd /projects/theia/ && git reset --hard v0.3.18 && che:theia init",
-        "name": "che:theia init",
+        "name": "1. INIT che:theia init",
         "attributes": {
           "machineName": "ws/dev",
           "goal": "Build"
@@ -123,7 +115,7 @@
       },
       {
         "commandLine": "cd /projects/theia/ && rm che/ -rf && rm packages/@che* && rm examples/assembly/ -rf && git fetch --all && git reset --hard origin/master",
-        "name": "cleanup che:theia init",
+        "name": "1.1 CLEAN INIT cleanup che:theia init",
         "attributes": {
           "machineName": "ws/dev",
           "goal": "Build"
@@ -132,7 +124,25 @@
       },
       {
         "commandLine": "cd /projects/theia/ && jq .command.run.concurrency=1 lerna.json  > lerna.json.tmp && mv lerna.json.tmp lerna.json && yarn",
-        "name": "theia build (concurrency=1)",
+        "name": "2. BUILD Theia (concurrency=1)",
+        "attributes": {
+          "machineName": "ws/dev",
+          "goal": "Build"
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects/che-theia/plugins/factory-plugin/ && yarn",
+        "name": "3. BUILD factory-plugin",
+        "attributes": {
+          "machineName": "ws/dev",
+          "goal": "Build"
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects/che-theia/plugins/factory-plugin/ && yarn && yarn test-watch",
+        "name": "3.1 TEST factory-plugin (watch)",
         "attributes": {
           "machineName": "ws/dev",
           "goal": "Build"
@@ -141,7 +151,7 @@
       },
       {
         "commandLine": "rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia || true && mkdir -p /projects/theiadev_projects && export CHE_PROJECTS_ROOT=/projects/theiadev_projects && export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ && cd /projects/theia/examples/assembly && export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr && yarn start /projects/theiadev_projects --hostname=0.0.0.0 --port=3130",
-        "name": "yarn start with che-theia-factory",
+        "name": "4. RUN Theia AND factory-plugin",
         "attributes": {
           "previewUrl": "${server.che-theia-dev}",
           "goal": "Build",
@@ -157,7 +167,7 @@
       "actions": [
         {
           "properties": {
-            "name": "factory-plugin yarn test-watch"
+            "name": "3.bis TEST factory-plugin (watch)"
           },
           "id": "runCommand"
         },
