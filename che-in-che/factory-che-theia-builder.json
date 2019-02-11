@@ -73,7 +73,7 @@
           "location": "https://github.com/eclipse/che-theia.git",
           "type": "git",
           "parameters": {
-            "branch": "che-12006-sync-projects-workspace"
+            "branch": "master"
           }
         },
         "path": "/che-theia",
