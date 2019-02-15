@@ -85,6 +85,7 @@
         "links": [],
         "name": "devfiles",
         "attributes": {},
+        "type": "blank",
         "source": {
           "location": "https://github.com/sunix/devfiles.git",
           "type": "git",
@@ -100,7 +101,7 @@
     ],
     "name": "chetheia_builder",
     "attributes": {
-      "editor": "org.eclipse.che.editor.theia:1.0.0",
+      "editor": "org.eclipse.che.editor.theia:master",
       "plugins": "che-machine-exec-plugin:0.0.1"
     },
     "commands": [
