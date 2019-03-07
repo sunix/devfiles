@@ -34,7 +34,7 @@ tools:
  #   memoryLimit: 256M
   - name: che-dev
     type: chePlugin
-    id: https://raw.githubusercontent.com/eclipse/che-plugin-registry/upgrade-che-theia-dev/plugins/org.eclipse.che.theia.dev:0.0.1
+    id: org.eclipse.che.theia.dev:0.0.1
 commands:
   - name: init ... che-theia
     actions:
@@ -57,6 +57,7 @@ commands:
       - type: exec
         tool: che-dev
         command: >
+                 killall node || true &&
                  cd /projects/theia/ &&
                  yarn
         workdir: /projects/theia
@@ -65,6 +66,7 @@ commands:
       - type: exec
         tool: che-dev
         command: >
+                 killall node || true &&
                  cd /projects/che-theia-samples/samples/hello-world-backend-plugin &&
                  yarn
         workdir: /projects/che-theia-samples/samples/
@@ -73,10 +75,10 @@ commands:
       - type: exec
         tool: theia-endpoint-runtime
         command: >
+                 killall node || true &&
                  echo export THEIA_PLUGIN_REMOTE_ENDPOINT_helloworld='ws://${HOSTNAME}:10000' > /projects/endpoint.env &&
                  export THEIA_PLUGINS='local-dir:///projects/che-theia-samples/samples/hello-world-backend-plugin' &&
                  export THEIA_PLUGIN_ENDPOINT_PORT='10000' &&
-                 killall node &&
                  node /home/theia/lib/node/plugin-remote.js
         workdir: /home/theia/
   - name: run ... che-theia
@@ -84,6 +86,7 @@ commands:
       - type: exec
         tool: che-dev
         command: >
+                 killall node || true &&
                  mkdir -p /projects/theiadev_projects &&
                  export CHE_PROJECTS_ROOT=/projects/theiadev_projects &&
                  . /projects/endpoint.env &&
