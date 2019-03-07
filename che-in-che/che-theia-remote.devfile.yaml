@@ -35,6 +35,9 @@ tools:
   - name: che-dev
     type: chePlugin
     id: org.eclipse.che.theia.dev:0.0.1
+  - name: vscode-yaml
+    type: chePlugin
+    id: redhat.vscode-yaml:0.3.0
 commands:
   - name: init ... che-theia
     actions:
@@ -95,4 +98,4 @@ commands:
                  yarn start /projects/theiadev_projects --hostname=0.0.0.0 --port=3010
         workdir: /projects/che-theia
 
-  
+
