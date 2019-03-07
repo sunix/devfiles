@@ -13,6 +13,10 @@ projects:
     source:
       type: git
       location: 'https://github.com/sunix/devfiles.git'
+  - name: che-theia-generator
+    source:
+      type: git
+      location: 'https://github.com/ws-skeleton/che-theia-generator.git'
 tools:
   - name: theia-editor
     type: cheEditor
