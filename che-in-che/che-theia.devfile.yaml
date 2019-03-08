@@ -45,7 +45,8 @@ commands:
         tool: che-dev
         command: >
                  cd /projects/theia/ &&
-                 che:theia init --dev
+                 che:theia init --dev &&
+                 echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
   - name: clean ... che-theia
     actions:
@@ -53,7 +54,8 @@ commands:
         tool: che-dev
         command: >
                  cd /projects/theia/ &&
-                 che:theia clean
+                 che:theia clean &&
+                 echo -e "\e[32mDone.\e[0m che:theia clean"
         workdir: /projects/theia
   - name: build ... che-theia
     actions:
@@ -62,7 +64,8 @@ commands:
         command: >
                  killall node || true &&
                  cd /projects/theia/ &&
-                 yarn
+                 yarn &&
+                 echo -e "\e[32mDone.\e[0m build ... che-theia"
         workdir: /projects/theia
   - name: build ... containers-plugin
     actions:
@@ -71,7 +74,8 @@ commands:
         command: >
                  killall node || true &&
                  cd /projects/che-theia/plugins/containers-plugin/ &&
-                 yarn
+                 yarn &&
+                 echo -e "\e[32mDone.\e[0m build ... containers-plugin"
         workdir: /projects/che-theia/plugins/containers-plugin
   - name: build ... factory-plugin
     actions:
@@ -80,7 +84,8 @@ commands:
         command: >
                  killall node || true &&
                  cd /projects/che-theia/plugins/factory-plugin/ &&
-                 yarn
+                 yarn &&
+                 echo -e "\e[32mDone.\e[0m build ... factory-plugin"
         workdir: /projects/che-theia/plugins/factory-plugin
   - name: test-watch ... factory-plugin
     actions:
@@ -89,7 +94,7 @@ commands:
         command: >
                  killall node || true &&
                  cd /projects/che-theia/plugins/factory-plugin/ &&
-                 yarn
+                 yarn test-watch
         workdir: /projects/che-theia/plugins/factory-plugin
   - name: run ... che-theia factory-plugin
     actions:
@@ -99,9 +104,9 @@ commands:
                  killall node || true &&
                  rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia || true &&
                  mkdir -p /tmp/theiadev_projects &&
+                 cd /projects/theia/examples/assembly &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ &&
-                 cd /projects/theia/examples/assembly &&
                  export GIT_EXEC_PATH=/usr/libexec/git-core &&
                  export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr && yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
         workdir: /projects/che-theia
@@ -111,11 +116,11 @@ commands:
         tool: che-dev
         command: >
                  killall node || true &&
-                 rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia || true &&
+                 rm /default-theia-plugins/eclipse_che_theia_containers_plugin.theia || true &&
                  mkdir -p /tmp/theiadev_projects &&
+                 cd /projects/theia/examples/assembly &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/containers-plugin/ &&
-                 cd /projects/theia/examples/assembly &&
                  export GIT_EXEC_PATH=/usr/libexec/git-core &&
                  export USE_LOCAL_GIT=true &&
                  export LOCAL_GIT_DIRECTORY=/usr &&
