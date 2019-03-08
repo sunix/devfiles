@@ -1,3 +1,9 @@
+# A devfile to setup che-theia projects.
+# For developers who work on Theia core or che-theia core extensions and plugins.
+# This devfile is setting up a Theia helloworld backend plugin that would be run
+# a remote sidecar container. Feel free to use it as a template for your own
+# remote plugin development devfiles.
+
 specVersion: 0.0.1
 name: cheTheia-in-che-remote
 projects:
@@ -90,12 +96,12 @@ commands:
         tool: che-dev
         command: >
                  killall node || true &&
-                 mkdir -p /projects/theiadev_projects &&
-                 export CHE_PROJECTS_ROOT=/projects/theiadev_projects &&
+                 mkdir -p /tmp/theiadev_projects &&
+                 export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  . /projects/endpoint.env &&
                  cd /projects/theia/examples/assembly &&
                  export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr &&
-                 yarn start /projects/theiadev_projects --hostname=0.0.0.0 --port=3010
+                 yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
         workdir: /projects/che-theia
 
 
