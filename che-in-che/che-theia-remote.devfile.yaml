@@ -63,7 +63,7 @@ commands:
                  che:theia clean &&
                  echo -e "\e[32mDone.\e[0m che:theia clean"
         workdir: /projects/theia
-  - name: build ... che-theia
+  - name: build ... DEV che-theia
     actions:
       - type: exec
         tool: che-dev
@@ -95,7 +95,7 @@ commands:
                  export THEIA_PLUGIN_ENDPOINT_PORT='10000' &&
                  node /home/theia/lib/node/plugin-remote.js
         workdir: /home/theia/
-  - name: run ... compiled che-theia + remote plugin
+  - name: run ... DEV che-theia + remote plugin
     actions:
       - type: exec
         tool: theia-editor
@@ -107,7 +107,7 @@ commands:
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
         workdir: /projects/theia/production
-  - name: run ... dev hosted che-theia + remote plugin
+  - name: run ... HOSTED che-theia + remote plugin
     actions:
       - type: exec
         tool: theia-editor
