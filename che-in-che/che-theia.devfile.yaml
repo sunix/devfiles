@@ -23,7 +23,7 @@ projects:
 tools:
   - name: theia-editor
     type: cheEditor
-    id: org.eclipse.che.editor.theia:master
+    id: org.eclipse.che.editor.theia:next
   - name: exec-plugin
     type: chePlugin
     id: che-machine-exec-plugin:0.0.1
