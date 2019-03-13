@@ -84,7 +84,7 @@ commands:
                  yarn &&
                  echo -e "\e[32mDone.\e[0m build ... hello-world-backend-plugin"
         workdir: /projects/che-theia-samples/samples/
-  - name: run ... remote theia endpoint
+  - name: run ... remote che plugin
     actions:
       - type: exec
         tool: theia-endpoint-runtime
