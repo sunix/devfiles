@@ -31,7 +31,7 @@ tools:
         attributes:
           protocol: ws
           public: 'true'
-    memoryLimit: 2Gi
+    memoryLimit: 512M
     mountSources: true
  # - name: git
  #   type: dockerimage
