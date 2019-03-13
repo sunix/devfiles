@@ -97,7 +97,7 @@ commands:
                  cd /projects/che-theia/plugins/factory-plugin/ &&
                  yarn test-watch
         workdir: /projects/che-theia/plugins/factory-plugin
-  - name: run ... che-theia factory-plugin
+  - name: run ... che-theia + factory-plugin
     actions:
       - type: exec
         tool: theia-editor
@@ -110,7 +110,7 @@ commands:
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
         workdir: /projects/theia/production
-  - name: run ... che-theia container-plugin
+  - name: run ... che-theia + container-plugin
     actions:
       - type: exec
         tool: theia-editor
