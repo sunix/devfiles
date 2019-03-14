@@ -90,7 +90,7 @@ commands:
         tool: theia-endpoint-runtime
         command: >
                  killall node;
-                 echo export THEIA_PLUGIN_REMOTE_ENDPOINT_helloworld='ws://${HOSTNAME}:10000' > /projects/endpoint.env &&
+                 echo export THEIA_PLUGIN_REMOTE_ENDPOINT_helloworld=\'ws://${HOSTNAME}:10000\' > /projects/endpoint.env &&
                  export THEIA_PLUGINS='local-dir:///projects/che-theia-samples/samples/hello-world-backend-plugin' &&
                  export THEIA_PLUGIN_ENDPOINT_PORT='10000' &&
                  node /home/theia/lib/node/plugin-remote.js
