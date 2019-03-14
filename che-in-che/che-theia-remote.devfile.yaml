@@ -119,5 +119,17 @@ commands:
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
         workdir: /home/theia/production
-
+  - name: run ... DEV yarn start ... che-theia + remote plugin
+    actions:
+      - type: exec
+        tool: che-dev
+        command: >
+                 killall node;
+                 mkdir -p /tmp/theiadev_projects &&
+                 export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
+                 . /projects/endpoint.env &&
+                 cd /projects/theia/examples/assembly &&
+                 export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr &&
+                 yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
+        workdir: /projects/che-theia
 

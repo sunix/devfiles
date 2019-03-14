@@ -123,5 +123,30 @@ commands:
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/containers-plugin/ &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
         workdir: /projects/theia/production
-
+  - name: run ... yarn start ... che-theia factory-plugin
+    actions:
+      - type: exec
+        tool: che-dev
+        command: >
+                 killall node;
+                 mkdir -p /tmp/theiadev_projects &&
+                 cd /projects/theia/examples/assembly &&
+                 export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
+                 export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ &&
+                 export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr &&
+                 yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
+        workdir: /projects/che-theia
+  - name: run ... yarn start ... che-theia container-plugin
+    actions:
+      - type: exec
+        tool: che-dev
+        command: >
+                 killall node;
+                 mkdir -p /tmp/theiadev_projects &&
+                 cd /projects/theia/examples/assembly &&
+                 export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
+                 export HOSTED_PLUGIN=/projects/che-theia/plugins/containers-plugin/ &&
+                 export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr &&
+                 yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
+        workdir: /projects/che-theia
 
