@@ -1,0 +1,26 @@
+# A devfile to setup che-theia projects.
+# For developers who work on Theia core or che-theia core extensions and plugins.
+
+specVersion: 0.0.1
+name: sunix-devfiles-wo-gitdockerimage
+projects:
+  - name: devfiles
+    source:
+      type: git
+      location: 'https://github.com/sunix/devfiles.git'
+components:
+  - name: theia-editor
+    type: cheEditor
+    id: org.eclipse.che.editor.theia:next
+  - name: exec-plugin
+    type: chePlugin
+    id: che-machine-exec-plugin:0.0.1
+#  - name: git
+#    type: dockerimage
+#    image: sunix/git-devtools
+#    mountSources: true
+#    memoryLimit: 256M
+  - name: vscode-yaml
+    type: chePlugin
+    id: redhat.vscode-yaml:0.3.0
+
