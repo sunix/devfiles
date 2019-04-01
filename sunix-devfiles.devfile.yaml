@@ -1,5 +1,5 @@
-# A devfile to setup che-theia projects.
-# For developers who work on Theia core or che-theia core extensions and plugins.
+# A devfile to setup sunix-devfiles repo
+#
 
 specVersion: 0.0.1
 name: sunix-devfiles
