@@ -20,7 +20,7 @@ projects:
     source:
       type: git
       location: 'https://github.com/ws-skeleton/che-theia-generator.git'
-tools:
+components:
   - name: theia-editor
     type: cheEditor
     id: org.eclipse.che.editor.theia:next
@@ -42,7 +42,7 @@ commands:
   - name: init ... che-theia
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  cd /projects/theia/ &&
                  che:theia init --dev &&
@@ -51,7 +51,7 @@ commands:
   - name: clean ... che-theia
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  cd /projects/theia/ &&
                  che:theia clean &&
@@ -60,7 +60,7 @@ commands:
   - name: build ... che-theia
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  cd /projects/theia/ &&
@@ -71,7 +71,7 @@ commands:
   - name: build ... containers-plugin
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  cd /projects/che-theia/plugins/containers-plugin/ &&
@@ -81,7 +81,7 @@ commands:
   - name: build ... factory-plugin
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  cd /projects/che-theia/plugins/factory-plugin/ &&
@@ -91,7 +91,7 @@ commands:
   - name: test-watch ... factory-plugin
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  cd /projects/che-theia/plugins/factory-plugin/ &&
@@ -100,7 +100,7 @@ commands:
   - name: run ... che-theia + factory-plugin
     actions:
       - type: exec
-        tool: theia-editor
+        component: theia-editor
         command: >
                  kill `cat /tmp/node_theiadev.pid`;
                  rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia;
@@ -113,7 +113,7 @@ commands:
   - name: run ... che-theia + container-plugin
     actions:
       - type: exec
-        tool: theia-editor
+        component: theia-editor
         command: >
                  kill `cat /tmp/node_theiadev.pid`;
                  rm /default-theia-plugins/eclipse_che_theia_containers_plugin.theia;
@@ -126,7 +126,7 @@ commands:
   - name: run ... yarn start ... che-theia factory-plugin
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  mkdir -p /tmp/theiadev_projects &&
@@ -139,7 +139,7 @@ commands:
   - name: run ... yarn start ... che-theia container-plugin
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  mkdir -p /tmp/theiadev_projects &&

@@ -15,7 +15,7 @@ projects:
     source:
       type: git
       location: 'https://github.com/theia-ide/theia.git'
-tools:
+components:
   - name: theia-editor
     type: cheEditor
     id: org.eclipse.che.editor.theia:next
@@ -33,11 +33,11 @@ tools:
           public: 'true'
     memoryLimit: 512M
     mountSources: true
- # - name: git
- #   type: dockerimage
- #   image: sunix/git-devtools
- #   mountSources: true
- #   memoryLimit: 256M
+  - name: git
+    type: dockerimage
+    image: sunix/git-devtools
+    mountSources: true
+    memoryLimit: 256M
   - name: che-dev
     type: chePlugin
     id: org.eclipse.che.theia.dev:0.0.1
@@ -48,7 +48,7 @@ commands:
   - name: init ... che-theia
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  cd /projects/theia/ &&
                  che:theia init --dev &&
@@ -57,7 +57,7 @@ commands:
   - name: clean ... che-theia
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  cd /projects/theia/ &&
                  che:theia clean &&
@@ -66,7 +66,7 @@ commands:
   - name: build ... DEV che-theia
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  cd /projects/theia/ &&
@@ -77,7 +77,7 @@ commands:
   - name: build ... hello-world-backend-plugin
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  cd /projects/che-theia-samples/samples/hello-world-backend-plugin &&
@@ -87,7 +87,7 @@ commands:
   - name: run ... remote che plugin
     actions:
       - type: exec
-        tool: theia-endpoint-runtime
+        component: theia-endpoint-runtime
         command: >
                  killall node;
                  echo export THEIA_PLUGIN_REMOTE_ENDPOINT_helloworld=\'ws://${HOSTNAME}:10000\' > /projects/endpoint.env &&
@@ -98,7 +98,7 @@ commands:
   - name: run ... DEV che-theia + remote plugin
     actions:
       - type: exec
-        tool: theia-editor
+        component: theia-editor
         command: >
                  kill `cat /tmp/node_theiadev.pid`;
                  mkdir -p /tmp/theiadev_projects &&
@@ -110,7 +110,7 @@ commands:
   - name: run ... HOSTED che-theia + remote plugin
     actions:
       - type: exec
-        tool: theia-editor
+        component: theia-editor
         command: >
                  kill `cat /tmp/node_theiadev.pid`;
                  mkdir -p /tmp/theiadev_projects &&
@@ -122,7 +122,7 @@ commands:
   - name: run ... DEV yarn start ... che-theia + remote plugin
     actions:
       - type: exec
-        tool: che-dev
+        component: che-dev
         command: >
                  killall node;
                  mkdir -p /tmp/theiadev_projects &&
