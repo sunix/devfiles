@@ -21,26 +21,23 @@ projects:
       type: git
       location: 'https://github.com/ws-skeleton/che-theia-generator.git'
 components:
-  - name: theia-editor
+  - alias: theia-editor
     type: cheEditor
     id: org.eclipse.che.editor.theia:next
-  - name: exec-plugin
-    type: chePlugin
+  - type: chePlugin
     id: che-machine-exec-plugin:0.0.1
-  - name: git
-    type: dockerimage
+  - type: dockerimage
     image: sunix/git-devtools
     mountSources: true
     memoryLimit: 256M
-  - name: che-dev
+  - alias: che-dev
     type: chePlugin
     id: org.eclipse.che.theia.dev:0.0.1
-  - name: vscode-yaml
-    type: chePlugin
+  - type: chePlugin
     id: redhat.vscode-yaml:0.3.0
-  - name: vscode-typescript
-    type: chePlugin
+  - type: chePlugin
     id: ms-vscode.typescript:1.30.2
+    memoryLimit: 2048M
 commands:
   - name: init ... che-theia
     actions:
