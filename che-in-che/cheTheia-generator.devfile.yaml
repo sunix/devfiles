@@ -15,8 +15,7 @@ projects:
   - name: che-theia-generator
     source:
       type: git
-      location: 'https://github.com/sunix/che-theia-generator.git'
-      branch: plugin-folders
+      location: 'https://github.com/ws-skeleton/che-theia-generator.git'
 components:
   -
     type: cheEditor
@@ -51,12 +50,12 @@ commands:
                  echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
   -
-    name: init (built from source) -C /projects/che-theia/extensions/extensions.yml... che-theia
+    name: init (built from source) -c /projects/che-theia/che-theia-init-sources.yml... che-theia
     actions:
       - type: exec
         component: che-dev
         command: >
-                 /projects/che-theia-generator/dist/index.js init --dev -c /projects/che-theia/extensions/extensions.yml &&
+                 /projects/che-theia-generator/dist/index.js init --dev -c /projects/che-theia/che-theia-init-sources.yml &&
                  echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
   -
