@@ -26,78 +26,89 @@ components:
     id: org.eclipse.che.editor.theia:next
   - type: chePlugin
     id: che-machine-exec-plugin:0.0.1
-  - type: dockerimage
+  - alias: git-devtools
+    type: dockerimage
     image: sunix/git-devtools
     mountSources: true
     memoryLimit: 256M
   - alias: che-dev
-    type: chePlugin
-    id: org.eclipse.che.theia.dev:0.0.1
+    type: dockerimage
+    image: eclipse/che-theia-dev:nightly
+    mountSources: true
+    endpoints:
+      - name: "theia-dev-flow"
+        port: 3010
+        attributes:
+          protocol: http
+          public: 'true'
+    memoryLimit: "2Gi"
   - type: chePlugin
     id: redhat.vscode-yaml:0.3.0
   - type: chePlugin
     id: ms-vscode.typescript:1.30.2
     memoryLimit: 2048M
 commands:
-  - name: init ... che-theia
+  - 
+    name: init ... che-theia
     actions:
       - type: exec
         component: che-dev
         command: >
-                 cd /projects/theia/ &&
                  che:theia init --dev &&
                  echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
-  - name: clean ... che-theia
+  - 
+    name: clean ... che-theia
     actions:
       - type: exec
         component: che-dev
         command: >
-                 cd /projects/theia/ &&
                  che:theia clean &&
                  echo -e "\e[32mDone.\e[0m che:theia clean"
         workdir: /projects/theia
-  - name: build ... che-theia
+  - 
+    name: build ... che-theia
     actions:
       - type: exec
         component: che-dev
         command: >
                  killall node;
-                 cd /projects/theia/ &&
                  yarn &&
                  che:theia production &&
                  echo -e "\e[32mDone.\e[0m build ... che-theia"
         workdir: /projects/theia
-  - name: build ... containers-plugin
+  - 
+    name: build ... containers-plugin
     actions:
       - type: exec
         component: che-dev
         command: >
                  killall node;
-                 cd /projects/che-theia/plugins/containers-plugin/ &&
                  yarn &&
                  echo -e "\e[32mDone.\e[0m build ... containers-plugin"
         workdir: /projects/che-theia/plugins/containers-plugin
-  - name: build ... factory-plugin
+  - 
+    name: build ... factory-plugin
     actions:
       - type: exec
         component: che-dev
         command: >
                  killall node;
-                 cd /projects/che-theia/plugins/factory-plugin/ &&
                  yarn &&
                  echo -e "\e[32mDone.\e[0m build ... factory-plugin"
         workdir: /projects/che-theia/plugins/factory-plugin
-  - name: test-watch ... factory-plugin
+  - 
+    name: test-watch ... factory-plugin
     actions:
       - type: exec
         component: che-dev
         command: >
                  killall node;
-                 cd /projects/che-theia/plugins/factory-plugin/ &&
                  yarn test-watch
         workdir: /projects/che-theia/plugins/factory-plugin
-  - name: run ... che-theia + factory-plugin
+
+  - 
+    name: run ... DEV che-theia + factory-plugin
     actions:
       - type: exec
         component: theia-editor
@@ -105,12 +116,13 @@ commands:
                  kill `cat /tmp/node_theiadev.pid`;
                  rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia;
                  mkdir -p /tmp/theiadev_projects &&
-                 cd /projects/theia/production &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
         workdir: /projects/theia/production
-  - name: run ... che-theia + container-plugin
+
+  - 
+    name: run ... DEV che-theia + container-plugin
     actions:
       - type: exec
         component: theia-editor
@@ -118,35 +130,62 @@ commands:
                  kill `cat /tmp/node_theiadev.pid`;
                  rm /default-theia-plugins/eclipse_che_theia_containers_plugin.theia;
                  mkdir -p /tmp/theiadev_projects &&
-                 cd /projects/theia/production &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/containers-plugin/ &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
         workdir: /projects/theia/production
-  - name: run ... yarn start ... che-theia factory-plugin
+
+  - 
+    name: run ... HOSTED che-theia + factory-plugin
+    actions:
+      - type: exec
+        component: theia-editor
+        command: >
+                 kill `cat /tmp/node_theiadev.pid`;
+                 rm /default-theia-plugins/eclipse_che_theia_factory_plugin.theia;
+                 mkdir -p /tmp/theiadev_projects &&
+                 export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
+                 export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ &&
+                 node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
+        workdir: /home/theia
+
+  - 
+    name: run ... HOSTED che-theia + container-plugin
+    actions:
+      - type: exec
+        component: theia-editor
+        command: >
+                 kill `cat /tmp/node_theiadev.pid`;
+                 rm /default-theia-plugins/eclipse_che_theia_containers_plugin.theia;
+                 mkdir -p /tmp/theiadev_projects &&
+                 export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
+                 export HOSTED_PLUGIN=/projects/che-theia/plugins/containers-plugin/ &&
+                 node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
+        workdir: /home/theia
+
+  - 
+    name: run ... DEV yarn start ... che-theia + factory-plugin
     actions:
       - type: exec
         component: che-dev
         command: >
                  killall node;
                  mkdir -p /tmp/theiadev_projects &&
-                 cd /projects/theia/examples/assembly &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/factory-plugin/ &&
                  export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr &&
                  yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
-        workdir: /projects/che-theia
-  - name: run ... yarn start ... che-theia container-plugin
+        workdir: /projects/theia/examples/assembly
+  - name: run ... DEV yarn start ... che-theia + container-plugin
     actions:
       - type: exec
         component: che-dev
         command: >
                  killall node;
                  mkdir -p /tmp/theiadev_projects &&
-                 cd /projects/theia/examples/assembly &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  export HOSTED_PLUGIN=/projects/che-theia/plugins/containers-plugin/ &&
                  export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr &&
                  yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
-        workdir: /projects/che-theia
+        workdir: /projects/theia/examples/assembly
 
