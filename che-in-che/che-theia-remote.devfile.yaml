@@ -16,13 +16,15 @@ projects:
       type: git
       location: 'https://github.com/theia-ide/theia.git'
 components:
-  - name: theia-editor
+  - 
+    alias: theia-editor
     type: cheEditor
     id: org.eclipse.che.editor.theia:next
-  - name: exec-plugin
+  - 
     type: chePlugin
     id: che-machine-exec-plugin:0.0.1
-  - name: theia-endpoint-runtime
+  - 
+    alias: theia-endpoint-runtime
     type: dockerimage
     image: eclipse/che-theia-endpoint-runtime:nightly
     endpoints:
@@ -33,22 +35,33 @@ components:
           public: 'true'
     memoryLimit: 512M
     mountSources: true
-  - name: git
+  - 
+    alias: git
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
     memoryLimit: 256M
-  - name: che-dev
-    type: chePlugin
-    id: org.eclipse.che.theia.dev:0.0.1
-  - name: vscode-yaml
+  - 
+    alias: che-dev
+    type: dockerimage
+    image: eclipse/che-theia-dev:nightly
+    mountSources: true
+    endpoints:
+      - name: "theia-dev-flow"
+        port: 3010
+        attributes:
+          protocol: http
+          public: 'true'
+    memoryLimit: "2Gi"
+  - 
     type: chePlugin
     id: redhat.vscode-yaml:0.3.0
-  - name: vscode-typescript
+  - 
     type: chePlugin
     id: ms-vscode.typescript:1.30.2
 commands:
-  - name: init ... che-theia
+  - 
+    name: init ... che-theia
     actions:
       - type: exec
         component: che-dev
@@ -57,7 +70,8 @@ commands:
                  che:theia init --dev &&
                  echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
-  - name: clean ... che-theia
+  - 
+    name: clean ... che-theia
     actions:
       - type: exec
         component: che-dev
@@ -66,7 +80,8 @@ commands:
                  che:theia clean &&
                  echo -e "\e[32mDone.\e[0m che:theia clean"
         workdir: /projects/theia
-  - name: build ... DEV che-theia
+  - 
+    name: build ... DEV che-theia
     actions:
       - type: exec
         component: che-dev
@@ -77,7 +92,8 @@ commands:
                  che:theia production &&
                  echo -e "\e[32mDone.\e[0m build ... che-theia"
         workdir: /projects/theia
-  - name: build ... hello-world-backend-plugin
+  - 
+    name: build ... hello-world-backend-plugin
     actions:
       - type: exec
         component: che-dev
@@ -87,7 +103,8 @@ commands:
                  yarn &&
                  echo -e "\e[32mDone.\e[0m build ... hello-world-backend-plugin"
         workdir: /projects/che-theia-samples/samples/
-  - name: run ... remote che plugin
+  - 
+    name: run ... remote che plugin
     actions:
       - type: exec
         component: theia-endpoint-runtime
@@ -98,31 +115,32 @@ commands:
                  export THEIA_PLUGIN_ENDPOINT_PORT='10000' &&
                  node /home/theia/lib/node/plugin-remote.js
         workdir: /home/theia/
-  - name: run ... DEV che-theia + remote plugin
+  - 
+    name: run ... DEV che-theia + remote plugin
     actions:
       - type: exec
         component: theia-editor
         command: >
                  kill `cat /tmp/node_theiadev.pid`;
                  mkdir -p /tmp/theiadev_projects &&
-                 cd /projects/theia/production &&
                  . /projects/endpoint.env &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
         workdir: /projects/theia/production
-  - name: run ... HOSTED che-theia + remote plugin
+  - 
+    name: run ... HOSTED che-theia + remote plugin
     actions:
       - type: exec
         component: theia-editor
         command: >
                  kill `cat /tmp/node_theiadev.pid`;
                  mkdir -p /tmp/theiadev_projects &&
-                 cd /home/theia &&
                  . /projects/endpoint.env &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  node src-gen/backend/main.js /tmp/theiadev_projects --hostname=0.0.0.0 --port=3130 & echo $!> /tmp/node_theiadev.pid ; wait `cat /tmp/node_theiadev.pid`
-        workdir: /home/theia/production
-  - name: run ... DEV yarn start ... che-theia + remote plugin
+        workdir: /home/theia
+  - 
+    name: run ... DEV yarn start ... che-theia + remote plugin
     actions:
       - type: exec
         component: che-dev
@@ -131,8 +149,7 @@ commands:
                  mkdir -p /tmp/theiadev_projects &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
                  . /projects/endpoint.env &&
-                 cd /projects/theia/examples/assembly &&
                  export GIT_EXEC_PATH=/usr/libexec/git-core && export USE_LOCAL_GIT=true && export LOCAL_GIT_DIRECTORY=/usr &&
                  yarn start /tmp/theiadev_projects --hostname=0.0.0.0 --port=3010
-        workdir: /projects/che-theia
+        workdir: /projects/theia/examples/assembly
 
