@@ -24,6 +24,7 @@ components:
     type: chePlugin
     id: che-machine-exec-plugin:0.0.1
   -
+    alias: git-devtools
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
@@ -41,7 +42,7 @@ components:
     memoryLimit: 2048M
 commands:
   -
-    name: init (built from source)... che-theia
+    name: run ... che:theia init (built from source)... che-theia
     actions:
       - type: exec
         component: che-dev
@@ -50,7 +51,7 @@ commands:
                  echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
   -
-    name: init (built from source) -c /projects/che-theia/che-theia-init-sources.yml... che-theia
+    name: run ... che:theia init (built from source) -c /projects/che-theia/che-theia-init-sources.yml
     actions:
       - type: exec
         component: che-dev
@@ -59,7 +60,7 @@ commands:
                  echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
   -
-    name: clean (built from source)... che-theia
+    name: run ... che:theia clean (built from source)
     actions:
       - type: exec
         component: che-dev
@@ -86,3 +87,4 @@ commands:
                  killall node;
                  yarn test-watch
         workdir: /projects/che-theia-generator
+
