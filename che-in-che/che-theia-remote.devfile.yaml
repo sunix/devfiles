@@ -61,7 +61,7 @@ components:
     type: chePlugin
 commands:
   - 
-    name: init ... che-theia
+    name: init ... DEV che-theia
     actions:
       - type: exec
         component: che-dev
@@ -71,7 +71,7 @@ commands:
                  echo -e "\e[32mDone.\e[0m che:theia init"
         workdir: /projects/theia
   - 
-    name: clean ... che-theia
+    name: clean ... DEV che-theia
     actions:
       - type: exec
         component: che-dev
