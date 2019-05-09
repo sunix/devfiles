@@ -30,6 +30,7 @@ components:
     command: ['tail']
     args: ['-f', '/dev/null']
   - 
+    name: git
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
