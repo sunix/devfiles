@@ -1,0 +1,43 @@
+specVersion: 0.0.1
+name: blog-sunix-org
+projects:
+  - 
+    name: blog-sunix-org
+    source:
+      type: git
+      location: 'https://github.com/sunix/blog.sunix.org.git'
+
+components:
+  - 
+    id: org.eclipse.che.editor.theia:next
+    type: cheEditor
+  - 
+    id: che-machine-exec-plugin:0.0.1
+    type: chePlugin
+  - 
+    alias: jekyll-builder 
+    type: dockerimage
+    image: jekyll/builder
+    endpoints:
+      - name: jekyll
+        port: 4000
+        attributes:
+          public: 'true'
+    memoryLimit: 256M
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+  - 
+    type: dockerimage
+    image: sunix/git-devtools
+    mountSources: true
+    memoryLimit: 256M
+commands:
+  - name: jekyll serve
+    actions:
+      - type: exec
+        component: jekyll-builder
+        command: mkdir -p /projects/blog-sunix-org/_site/ && jekyll serve --host 0.0.0.0
+        workdir: /projects/blog-sunix-org/
+
+ 
