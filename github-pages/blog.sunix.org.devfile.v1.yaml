@@ -9,13 +9,15 @@ projects:
 
 components:
   - 
+    name: che-theia
     id: org.eclipse.che.editor.theia:next
     type: cheEditor
   - 
+    name: machine-exec
     id: che-machine-exec-plugin:0.0.1
     type: chePlugin
   - 
-    alias: jekyll-builder 
+    name: jekyll-builder 
     type: dockerimage
     image: jekyll/builder
     endpoints:
