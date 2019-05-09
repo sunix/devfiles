@@ -6,7 +6,8 @@ projects:
     source:
       type: git
       location: 'https://github.com/sunix/blog.sunix.org.git'
-
+attributes:
+  persistVolumes: false
 components:
   - 
     name: che-theia
