@@ -29,18 +29,22 @@ components:
     command: ['tail']
     args: ['-f', '/dev/null']
 
-  - type: chePlugin
-    alias: java-ls
-    id: redhat/java/0.43.0
-    memoryLimit: 1536M
-
-  - alias: git-devtools
+  - alias: git
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
     memoryLimit: 256M
     command: ['tail']
     args: ['-f', '/dev/null']
+
+  - alias: java
+    type: chePlugin
+    id: redhat/java/0.43.0
+    memoryLimit: 1536M
+
+  - alias: yaml
+    id: redhat/vscode-yaml/0.4.0
+    type: chePlugin
 
   - type: cheEditor
     alias: theia-editor
