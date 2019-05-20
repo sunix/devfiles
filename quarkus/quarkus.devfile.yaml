@@ -24,7 +24,7 @@ components:
   - alias: quarkus-runner
     type: dockerimage
     image: registry.fedoraproject.org/fedora-minimal
-    memoryLimit: 56M
+    memoryLimit: 16M
     mountSources: true
     command: ['tail']
     args: ['-f', '/dev/null']
@@ -45,7 +45,9 @@ components:
   - type: cheEditor
     alias: theia-editor
     id: eclipse/che-theia/next
+
 commands:
+
   - name: compile quarkus:dev
     actions:
       - type: exec
@@ -73,10 +75,18 @@ commands:
         component: quarkus-builder
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo
 
-  - name: run native
+  - name: start native
     actions:
       - type: exec
-        command: ./sunix-quarkus-demo-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0
+        command: ./sunix-quarkus-demo-1.0-SNAPSHOT-runner -Dquarkus.http.host=0.0.0.0 & echo $!> /tmp/quarkus.pid ; wait `cat /tmp/quarkus.pid`
+        component: quarkus-runner
+        workdir: /projects/che-quarkus-demo/sunix-quarkus-demo/target
+
+  - name: stop native
+    actions:
+      - type: exec
+        command: >
+                 kill `cat /tmp/quarkus.pid`;
         component: quarkus-runner
         workdir: /projects/che-quarkus-demo/sunix-quarkus-demo/target
 
