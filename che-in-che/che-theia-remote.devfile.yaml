@@ -145,7 +145,7 @@ commands:
       - type: exec
         component: theia-editor
         command: >
-                 kill `cat /tmp/node_theiadev.pid`;
+                 kill `cat /tmp/node_theiadev.pid` &> /dev/null;
                  mkdir -p /tmp/theiadev_projects &&
                  export THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' &&
                  export CHE_PROJECTS_ROOT=/tmp/theiadev_projects &&
