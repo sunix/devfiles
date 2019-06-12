@@ -1,0 +1,81 @@
+# version that works on che.openshift.io
+
+
+specVersion: 0.0.1
+
+name: che-site-docs
+
+projects:
+  - source:
+      type: git
+      location: 'https://github.com/eclipse/che-docs'
+    name: che-docs
+  - source:
+      type: git
+      location: 'https://git.eclipse.org/r/www.eclipse.org/che'
+    name: che
+
+components:
+  - alias: git-devtools
+    type: dockerimage
+    image: sunix/git-devtools
+    mountSources: true
+    memoryLimit: 256M
+
+  - alias: jekyll
+    type: dockerimage
+    image: jekyll/builder:3.8
+    memoryLimit: 512M
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+
+  - alias: php
+    type: dockerimage
+    image: eclipse/php
+    mountSources: true
+    memoryLimit: 256M
+    command: ['tail']
+    args: ['-f', '/dev/null']
+
+commands:
+  - name: start che-docs
+    actions:
+      - type: exec
+        command: >-
+          bundle install &&
+          jekyll serve --host
+          0.0.0.0
+        component: jekyll
+        workdir: /projects/che-docs/src/main
+
+  - name: start che-site
+    actions:
+      - type: exec
+        command: >-
+          service apache2 start && tail -f /var/log/apache2/access.log -f /var/log/apache2/error.log
+        component: php
+        workdir: /projects/che
+  - name: setup git
+    actions:
+      - type: exec
+        command: >-
+          mkdir -p /home/git/.ssh;
+          echo Paste paste your .ssh/id_rsa and Ctrl-d to validate;
+          cat > /home/git/.ssh/id_rsa;
+          chmod 600 /home/git/.ssh/id_rsa;
+          echo Paste your .ssh/id_rsa.pub and Ctrl-d to validate;
+          cat > /home/git/.ssh/id_rsa.pub;
+          chmod 644 /home/git/.ssh/id_rsa.pub;
+          echo Enter your full name for git author;
+          read fullname;
+          git config --global user.name "$fullname";
+          echo Enter your email for git author email;
+          read email;
+          git config --global user.email "$email";
+          echo Enter your Eclipse username;
+          read eclipseuser;
+          cd /projects/che/ && git remote add ssh ssh://$eclipseuser@git.eclipse.org:29418/www.eclipse.org/che
+        component: git-devtools
+        workdir: /projects/che
+
