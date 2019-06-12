@@ -1,6 +1,6 @@
 apiVersion: 1.0.0
 metadata:
-  name: che-docs
+  name: che-site-docs
 projects:
   - source:
       type: git
