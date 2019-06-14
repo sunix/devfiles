@@ -4,20 +4,25 @@
 # a remote sidecar container. Feel free to use it as a template for your own
 # remote plugin development devfiles.
 
-specVersion: 0.0.1
-name: cheTheia-in-che-remote
+apiVersion: 1.0.0
+metadata:
+  name: cheTheia-in-che-remote
+
 projects:
+
   - name: che-theia-samples
     source:
       type: git
       location: 'https://github.com/eclipse/che-theia-samples.git'
+
   - name: theia
     source:
       type: git
       location: 'https://github.com/theia-ide/theia.git'
+
 components:
-  - 
-    alias: theia-endpoint-runtime
+
+  - alias: theia-endpoint-runtime
     type: dockerimage
     image: eclipse/che-theia-endpoint-runtime:nightly
     endpoints:
@@ -28,14 +33,14 @@ components:
           public: 'true'
     memoryLimit: 512M
     mountSources: true
-  - 
-    alias: git
+
+  - alias: git
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
     memoryLimit: 256M
-  - 
-    alias: che-dev
+
+  - alias: che-dev
     type: dockerimage
     image: eclipse/che-theia-dev:nightly
     mountSources: true
@@ -46,20 +51,14 @@ components:
           protocol: http
           public: 'true'
     memoryLimit: "2Gi"
-  - 
-    alias: theia-editor
-    id: eclipse/che-theia/next
-    type: cheEditor
-  - 
-    id: eclipse/che-machine-exec-plugin/0.0.1
+
+  - id: redhat/vscode-yaml/latest
     type: chePlugin
-  - 
-    id: redhat/vscode-yaml/0.4.0
+
+  - id: che-incubator/typescript/latest
     type: chePlugin
-  - 
-    id: che-incubator/typescript/1.30.2
-    type: chePlugin
-    memoryLimit: 2048M    
+    memoryLimit: 2048M
+
 commands:
   - 
     name: init ... DEV che-theia
