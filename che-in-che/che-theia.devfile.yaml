@@ -54,6 +54,10 @@ components:
     type: chePlugin
     memoryLimit: 2048M
 
+  - type: cheEditor
+    alias: theia-editor
+    id: eclipse/che-theia/next
+
 commands:
 
   - name: init ... DEV che-theia
