@@ -22,14 +22,6 @@ components:
     mountSources: true
     memoryLimit: 256M
 
-  - alias: jekyll
-    type: dockerimage
-    image: quay.io/sunix/jekyll:latest
-    memoryLimit: 512M
-    mountSources: true
-    command: ['tail']
-    args: ['-f', '/dev/null']
-
   - alias: php
     type: dockerimage
     image: eclipse/php
@@ -39,15 +31,6 @@ components:
     args: ['-f', '/dev/null']
 
 commands:
-  - name: start che-docs
-    actions:
-      - type: exec
-        command: >-
-          bundle install &&
-          jekyll serve --host --incremental
-          0.0.0.0
-        component: jekyll
-        workdir: /projects/che-docs/src/main
 
   - name: start che-site
     actions:
@@ -56,6 +39,7 @@ commands:
           service apache2 start && tail -f /var/log/apache2/access.log -f /var/log/apache2/error.log
         component: php
         workdir: /projects/che
+
   - name: setup git
     actions:
       - type: exec
