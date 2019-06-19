@@ -24,7 +24,7 @@ components:
 
   - alias: jekyll
     type: dockerimage
-    image: jekyll/builder:3.8
+    image: quay.io/sunix/jekyll:latest
     memoryLimit: 512M
     mountSources: true
     command: ['tail']
@@ -44,7 +44,7 @@ commands:
       - type: exec
         command: >-
           bundle install &&
-          jekyll serve --host
+          jekyll serve --host --incremental
           0.0.0.0
         component: jekyll
         workdir: /projects/che-docs/src/main

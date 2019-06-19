@@ -1,5 +1,6 @@
-specVersion: 0.0.1
-name: blog-sunix-org
+apiVersion: 1.0.0
+metadata:
+  name: blog-sunix-org
 projects:
   - 
     name: blog-sunix-org
@@ -17,7 +18,7 @@ components:
   - 
     alias: jekyll-builder 
     type: dockerimage
-    image: jekyll/builder
+    image: quay.io/sunix/jekyll:latest
     endpoints:
       - name: jekyll
         port: 4000
@@ -37,7 +38,7 @@ commands:
     actions:
       - type: exec
         component: jekyll-builder
-        command: mkdir -p /projects/blog-sunix-org/_site/ && jekyll serve --host 0.0.0.0
+        command: $GEM_BIN/jekyll serve --host 0.0.0.0 --incremental
         workdir: /projects/blog-sunix-org/
 
  
