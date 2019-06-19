@@ -5,12 +5,15 @@
 apiVersion: 1.0.0
 metadata:
   name: raffle
+
 projects:
   - source:
       type: git
       location: 'https://github.com/redhat-developer-demos/raffle'
     name: raffle
+
 components:
+
   - alias: 'maven-3-6-0-jdk-11'
     type: dockerimage
     image: 'maven:3.6.0-jdk-11'
@@ -21,10 +24,13 @@ components:
     args:
       - '-f'
       - /dev/null
+
   - type: chePlugin
     alias: java-ls
     id: redhat/java/latest
+
 commands:
+
   - name: 'mvn spring-boot:run'
     actions:
       - type: exec
