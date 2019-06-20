@@ -8,15 +8,11 @@ name: che-site-docs
 projects:
   - source:
       type: git
-      location: 'https://github.com/eclipse/che-docs'
-    name: che-docs
-  - source:
-      type: git
-      location: 'https://git.eclipse.org/r/www.eclipse.org/che'
-    name: che
+      location: 'https://github.com/sunix/che-website'
+    name: che-website
 
 components:
-  - alias: git-devtools
+  - alias: git
     type: dockerimage
     image: sunix/git-devtools
     mountSources: true
@@ -32,34 +28,13 @@ components:
 
 commands:
 
-  - name: start che-site
+  - name: start che-website
     actions:
       - type: exec
         command: >-
+          if [ ! -f "/projects/che" ]; then ln -s /projects/che-website/che ; fi
           service apache2 start && tail -f /var/log/apache2/access.log -f /var/log/apache2/error.log
         component: php
-        workdir: /projects/che
+        workdir: /projects/
 
-  - name: setup git
-    actions:
-      - type: exec
-        command: >-
-          mkdir -p /home/git/.ssh;
-          echo Paste paste your .ssh/id_rsa and Ctrl-d to validate;
-          cat > /home/git/.ssh/id_rsa;
-          chmod 600 /home/git/.ssh/id_rsa;
-          echo Paste your .ssh/id_rsa.pub and Ctrl-d to validate;
-          cat > /home/git/.ssh/id_rsa.pub;
-          chmod 644 /home/git/.ssh/id_rsa.pub;
-          echo Enter your full name for git author;
-          read fullname;
-          git config --global user.name "$fullname";
-          echo Enter your email for git author email;
-          read email;
-          git config --global user.email "$email";
-          echo Enter your Eclipse username;
-          read eclipseuser;
-          cd /projects/che/ && git remote add ssh ssh://$eclipseuser@git.eclipse.org:29418/www.eclipse.org/che
-        component: git-devtools
-        workdir: /projects/che
 
