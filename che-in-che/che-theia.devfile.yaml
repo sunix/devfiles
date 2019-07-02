@@ -37,7 +37,7 @@ components:
 
   - alias: che-dev
     type: dockerimage
-    image: eclipse/che-theia-dev:nightly
+    image: eclipse/che-theia-dev:next
     mountSources: true
     endpoints:
       - name: "theia-dev-flow"
