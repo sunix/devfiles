@@ -4,7 +4,7 @@
 
 apiVersion: 1.0.0
 metadata:
-  name: raffle
+  generateName: raffle-
 
 projects:
   - source:
