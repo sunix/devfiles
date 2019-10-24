@@ -24,7 +24,15 @@ components:
     args:
       - '-f'
       - /dev/null
-
+    volumes:
+      - name: mavenrepo
+        containerPath: /.m2
+    env:
+      - name: M2_REPO
+        value: /.m2/
+    endpoints:
+      - name: 'tcp8080'
+        port: 8080
   - type: chePlugin
     alias: java-ls
     id: redhat/java/latest
