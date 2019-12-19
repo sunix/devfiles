@@ -14,14 +14,6 @@ projects:
       type: git
       location: 'https://github.com/eclipse/che-plugin-registry'
 components:
-  - mountSources: true
-    args:
-      - sleep
-      - infinity
-    memoryLimit: 64M
-    type: dockerimage
-    image: sunix/git-devtools
-    alias: git
   - id: redhat/vscode-yaml/latest
     type: chePlugin
   - mountSources: true
