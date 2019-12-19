@@ -4,24 +4,46 @@
 apiVersion: 1.0.0
 metadata:
   generateName: sunix-devfile-registry-
+
 projects:
+
   - name: sunix-devfiles
     source:
       type: git
       location: 'https://github.com/sunix/devfiles.git'
+
   - name: devfile-registry
     source:
       type: git
       location: 'https://github.com/eclipse/che-devfile-registry'
+
 components:
+
   - id: redhat/vscode-yaml/latest
     type: chePlugin
-  - mountSources: true
+
+  - alias: git
+    image: sunix/git-devtools
+    type: dockerimage
+    memoryLimit: 64M
+    mountSources: true
     args:
       - sleep
       - infinity
-    memoryLimit: 64M
-    type: dockerimage
-    image: sunix/git-devtools
-    alias: git
 
+  - alias: devfile-registry-builder
+    image: 'quay.io/sunix/devfile-registry-builder:latest'
+    type: dockerimage
+    memoryLimit: 64M
+    mountSources: true
+  
+commands:
+
+  - name: generate devfile index.json
+    actions:
+      - type: exec
+        command: |-
+                  /projects/devfile-registry/build/scripts/check_mandatory_fields.sh devfiles;
+                  /projects/devfile-registry/build/scripts/index.sh > index.json;
+        component: devfile-registry-builder
+        workdir: /projects/sunix-devfiles
