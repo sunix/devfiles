@@ -1,26 +1,35 @@
 # A devfile to setup sunix-devfiles repo
 #
 
-specVersion: 0.0.1
-name: sunix-devfiles
+apiVersion: 1.0.0
+metadata:
+  generateName: sunix-devfile-registry-
 projects:
-  - name: devfiles
+  - name: sunix-devfiles
     source:
       type: git
       location: 'https://github.com/sunix/devfiles.git'
+  - name: devfile-registry
+    source:
+      type: git
+      location: 'https://github.com/eclipse/che-plugin-registry'
 components:
-  - name: theia-editor
-    type: cheEditor
-    id: org.eclipse.che.editor.theia:next
-  - name: exec-plugin
-    type: chePlugin
-    id: che-machine-exec-plugin:0.0.1
-  - name: git
+  - mountSources: true
+    args:
+      - sleep
+      - infinity
+    memoryLimit: 64M
     type: dockerimage
     image: sunix/git-devtools
-    mountSources: true
-    memoryLimit: 256M
-  - name: vscode-yaml
+    alias: git
+  - id: redhat/vscode-yaml/latest
     type: chePlugin
-    id: redhat.vscode-yaml:0.3.0
+  - mountSources: true
+    args:
+      - sleep
+      - infinity
+    memoryLimit: 64M
+    type: dockerimage
+    image: sunix/git-devtools
+    alias: git
 
