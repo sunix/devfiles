@@ -44,6 +44,14 @@ commands:
       - type: exec
         command: |-
                   /projects/devfile-registry/build/scripts/check_mandatory_fields.sh devfiles;
-                  /projects/devfile-registry/build/scripts/index.sh > index.json;
+                  /projects/devfile-registry/build/scripts/index.sh > devfiles/index.json;
         component: devfile-registry-builder
+        workdir: /projects/sunix-devfiles
+
+  - name: push to sunix devfile registry
+    actions:
+      - type: exec
+        # my github pages is not the root path
+        command: git subtree push --prefix devfiles origin gh-pages;
+        component: git
         workdir: /projects/sunix-devfiles
