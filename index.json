@@ -1,0 +1,16 @@
+[
+  {
+    "displayName": "VSCode Quarkus in Che",
+    "description": "Code the VSCode Quarkus extension in Che",
+    "tags": [
+      "Java",
+      "Quarkus",
+      "Selfhosting"
+    ],
+    "icon": "https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg",
+    "globalMemoryLimit": "2674Mi",
+    "links": {
+      "self": "/devfiles/vscode-quarkus/devfile.yaml"
+    }
+  }
+]
