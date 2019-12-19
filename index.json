@@ -12,5 +12,17 @@
     "links": {
       "self": "/devfiles/vscode-quarkus/devfile.yaml"
     }
+  },
+  {
+    "displayName": "Sunix Devfile Registry",
+    "description": "Edit this devfile registry",
+    "tags": [
+      "Devfiles"
+    ],
+    "icon": "https://www.eclipse.org/che/images/logo-eclipseche.svg",
+    "globalMemoryLimit": "2674Mi",
+    "links": {
+      "self": "/devfiles/sunix-devfiles-registry/devfile.yaml"
+    }
   }
 ]

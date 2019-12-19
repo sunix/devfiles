@@ -5,4 +5,4 @@ tags: ["Devfiles"]
 icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
 globalMemoryLimit: 2674Mi
 links:
-  self: /devfiles/devfile.yaml
+  self: /devfiles/sunix-devfiles-registry/devfile.yaml
