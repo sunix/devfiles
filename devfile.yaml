@@ -12,7 +12,7 @@ projects:
   - name: devfile-registry
     source:
       type: git
-      location: 'https://github.com/eclipse/che-plugin-registry'
+      location: 'https://github.com/eclipse/che-devfile-registry'
 components:
   - id: redhat/vscode-yaml/latest
     type: chePlugin
