@@ -6,5 +6,4 @@ icon: https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.s
 globalMemoryLimit: 2674Mi
 links:
   self: /devfiles/vscode-quarkus/devfile.yaml
-links:
-  self: /devfiles/vscode-quarkus/devfile.yaml
+
