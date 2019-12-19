@@ -1,0 +1,57 @@
+# A devfile to setup sunix-devfiles repo
+#
+
+apiVersion: 1.0.0
+metadata:
+  generateName: sunix-devfile-registry-
+
+projects:
+
+  - name: sunix-devfiles
+    source:
+      type: git
+      location: 'https://github.com/sunix/devfiles.git'
+
+  - name: devfile-registry
+    source:
+      type: git
+      location: 'https://github.com/eclipse/che-devfile-registry'
+
+components:
+
+  - id: redhat/vscode-yaml/latest
+    type: chePlugin
+
+  - alias: git
+    image: sunix/git-devtools
+    type: dockerimage
+    memoryLimit: 64M
+    mountSources: true
+    args:
+      - sleep
+      - infinity
+
+  - alias: devfile-registry-builder
+    image: 'quay.io/sunix/devfile-registry-builder:latest'
+    type: dockerimage
+    memoryLimit: 64M
+    mountSources: true
+  
+commands:
+
+  - name: generate devfile index.json
+    actions:
+      - type: exec
+        command: |-
+                  /projects/devfile-registry/build/scripts/check_mandatory_fields.sh devfiles;
+                  /projects/devfile-registry/build/scripts/index.sh > devfiles/index.json;
+        component: devfile-registry-builder
+        workdir: /projects/sunix-devfiles
+
+  - name: push to sunix devfile registry
+    actions:
+      - type: exec
+        # my github pages is not the root path
+        command: git subtree push --prefix devfiles origin gh-pages;
+        component: git
+        workdir: /projects/sunix-devfiles
