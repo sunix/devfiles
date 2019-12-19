@@ -1,0 +1,46 @@
+---
+apiVersion: 1.0.0
+metadata:
+  generateName: vscode-quarkus-
+projects:
+  - name: vscode-quarkus
+    source:
+      type: git
+      location: "https://github.com/redhat-developer/vscode-quarkus"
+
+  - name: quarkus-ls
+    source:
+      type: git
+      location: "https://github.com/redhat-developer/quarkus-ls"
+
+components:
+
+  - type: chePlugin
+    id: redhat/java11/latest
+
+  - alias: quarkus-backend-dev
+    type: dockerimage
+    image: quay.io/quarkus/centos-quarkus-maven:19.2.1
+    memoryLimit: 2Gi
+    command: ['sleep']
+    args: ['infinity']
+    mountSources: true
+    endpoints:
+      - name: 'quarkus/dev'
+        port: 8080
+    volumes:
+      - name: m2
+        containerPath: /home/user/.m2
+
+  - alias: node-frontend-dev
+    mountSources: true
+    image: 'quay.io/eclipse/che-nodejs8-centos:7.2.0'
+    memoryLimit: 768Mi
+    type: dockerimage
+    endpoints:
+      - name: '3000/tcp'
+        port: 3000
+    env:
+      - name: FRONTEND_PORT
+        value: '3000'
+
