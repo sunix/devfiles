@@ -13,6 +13,11 @@ projects:
       type: git
       location: "https://github.com/redhat-developer/quarkus-ls"
 
+  - name: che-plugin-registry
+    source:
+      type: git
+      location: "https://github.com/eclipse/che-plugin-registry"
+
 components:
 
   - type: chePlugin
@@ -32,15 +37,50 @@ components:
       - name: m2
         containerPath: /home/user/.m2
 
-  - alias: node-frontend-dev
+  - alias: npm-maven
     mountSources: true
     image: 'quay.io/eclipse/che-nodejs8-centos:7.2.0'
     memoryLimit: 768Mi
     type: dockerimage
-    endpoints:
-      - name: '3000/tcp'
-        port: 3000
-    env:
-      - name: FRONTEND_PORT
-        value: '3000'
+    volumes:
+      - name: m2
+        containerPath: /home/user/.m2
 
+  - alias: che-dev
+    type: dockerimage
+    image: eclipse/che-theia-dev:next
+    mountSources: true
+    endpoints:
+      - name: "theia-dev-flow"
+        port: 3010
+        attributes:
+          protocol: http
+          public: 'true'
+    memoryLimit: "3Gi"
+
+
+commands:
+
+  - name: npm install
+    actions:
+      - type: exec
+        command: npm install
+        component: npm-maven
+        workdir: /projects/vscode-quarkus
+
+  - name: npm run build
+    actions:
+      - type: exec
+        command: npm run build
+        component: npm-maven
+        workdir: /projects/vscode-quarkus
+
+  - name: package ... vscode extension
+    actions:
+      - workdir: /projects/vscode-quarkus
+        type: exec
+        command: >
+          npm install;
+          yes | vsce package;
+          echo -e "\e[32mDone.\e[0m Packaging complete"
+        component: che-dev
