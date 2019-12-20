@@ -1,5 +1,17 @@
 [
   {
+    "displayName": "Sunix Devfile Registry",
+    "description": "Edit this devfile registry",
+    "tags": [
+      "Devfiles"
+    ],
+    "icon": "https://www.eclipse.org/che/images/logo-eclipseche.svg",
+    "globalMemoryLimit": "2674Mi",
+    "links": {
+      "self": "/devfiles/sunix-devfiles-registry/devfile.yaml"
+    }
+  },
+  {
     "displayName": "VSCode Quarkus in Che",
     "description": "Code the VSCode Quarkus extension in Che",
     "tags": [
@@ -14,15 +26,15 @@
     }
   },
   {
-    "displayName": "Sunix Devfile Registry",
-    "description": "Edit this devfile registry",
+    "displayName": "RedHat Developers Demo - Raffle",
+    "description": "Raffle to pick a retweet with a picture a specified hashtag",
     "tags": [
-      "Devfiles"
+      "Raffle"
     ],
     "icon": "https://www.eclipse.org/che/images/logo-eclipseche.svg",
     "globalMemoryLimit": "2674Mi",
     "links": {
-      "self": "/devfiles/sunix-devfiles-registry/devfile.yaml"
+      "self": "/devfiles/rh-developer-raffle/devfile.yaml"
     }
   }
 ]

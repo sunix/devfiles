@@ -1,0 +1,9 @@
+---
+displayName: RedHat Developers Demo - Raffle
+description: Raffle to pick a retweet with a picture a specified hashtag
+tags: ["Raffle"]
+icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
+globalMemoryLimit: 2674Mi
+
+links:
+  self: /devfiles/rh-developer-raffle/devfile.yaml
