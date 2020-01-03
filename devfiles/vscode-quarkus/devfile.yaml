@@ -20,13 +20,15 @@ projects:
 
 components:
 
-  - type: chePlugin
-    id: redhat/java11/latest
+  - alias: java
+    id: redhat/java/latest
+    memoryLimit: 3072M
+    type: chePlugin
 
   - alias: quarkus-backend-dev
     type: dockerimage
     image: quay.io/quarkus/centos-quarkus-maven:19.2.1
-    memoryLimit: 2Gi
+    memoryLimit: 1Gi
     command: ['sleep']
     args: ['infinity']
     mountSources: true
@@ -36,6 +38,10 @@ components:
     volumes:
       - name: m2
         containerPath: /home/user/.m2
+
+  - id: eclipse/che-theia/next
+    type: cheEditor
+    alias: theia-editor
 
   - alias: npm-maven
     mountSources: true
@@ -56,8 +62,13 @@ components:
         attributes:
           protocol: http
           public: 'true'
-    memoryLimit: "3Gi"
+    memoryLimit: "1Gi"
 
+  - mountSources: true
+    memoryLimit: 256M
+    type: dockerimage
+    alias: git
+    image: sunix/git-devtools
 
 commands:
 
@@ -84,3 +95,27 @@ commands:
           yes | vsce package;
           echo -e "\e[32mDone.\e[0m Packaging complete"
         component: che-dev
+ 
+  - name: run ... HOSTED che-theia + detect remote vscode ext
+    actions:
+      - workdir: /home/theia
+        type: exec
+        command: >
+          mkdir -p /tmp/theiadev_projects && export
+          THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' && export
+          CHE_PROJECTS_ROOT=/tmp/theiadev_projects && /usr/local/bin/node
+          /home/theia/src-gen/backend/main.js /tmp/theiadev_projects
+          --hostname=0.0.0.0 --port=3130
+        component: theia-editor
+
+ - name: run ... remote vscode ext
+    actions:
+      - workdir: /home/theia/
+        type: exec
+        command: >
+          export THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' && export
+          THEIA_PLUGINS='local-dir:///projects/vscode-quarkus/' && export
+          THEIA_PLUGIN_ENDPOINT_PORT='10000' &&
+          /remote-endpoint/plugin-remote-endpoint
+        component: java
+
