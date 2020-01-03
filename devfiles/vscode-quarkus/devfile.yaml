@@ -78,7 +78,7 @@ commands:
         command: >
           npm install &&
           npm run build &&
-          && echo -e "\e[32mDone.\e[0m npm install and run build complete"
+          echo -e "\e[32mDone.\e[0m npm install and run build complete"
         component: npm-maven
         workdir: /projects/vscode-quarkus
 
