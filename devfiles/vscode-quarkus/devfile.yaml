@@ -108,7 +108,7 @@ commands:
           --hostname=0.0.0.0 --port=3130
         component: theia-editor
 
- - name: run ... remote vscode ext
+  - name: run ... remote vscode ext
     actions:
       - workdir: /home/theia/
         type: exec
