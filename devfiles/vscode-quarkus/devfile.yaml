@@ -72,17 +72,13 @@ components:
 
 commands:
 
-  - name: npm install
+  - name: npm install and run build
     actions:
       - type: exec
-        command: npm install
-        component: npm-maven
-        workdir: /projects/vscode-quarkus
-
-  - name: npm run build
-    actions:
-      - type: exec
-        command: npm run build
+        command: >
+          npm install &&
+          npm run build &&
+          && echo -e "\e[32mDone.\e[0m npm install and run build complete"
         component: npm-maven
         workdir: /projects/vscode-quarkus
 
@@ -91,8 +87,7 @@ commands:
       - workdir: /projects/vscode-quarkus
         type: exec
         command: >
-          npm install;
-          yes | vsce package;
+          yes | vsce package &&
           echo -e "\e[32mDone.\e[0m Packaging complete"
         component: che-dev
  
