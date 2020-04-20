@@ -38,8 +38,8 @@
     }
   },
   {
-    "displayName": "Quarkus Tools",
-    "description": "Quarkus Tools with OpenJDK 8 and Maven 3.6.3",
+    "displayName": "Quarkus Native",
+    "description": "Build and run hotspot or native Quarkus app"
     "tags": [
       "Quarkus"
     ],
