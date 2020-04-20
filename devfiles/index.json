@@ -36,5 +36,17 @@
     "links": {
       "self": "/devfiles/rh-developer-raffle/devfile.yaml"
     }
+  },
+  {
+    "displayName": "Quarkus Tools",
+    "description": "Quarkus Tools with OpenJDK 8 and Maven 3.6.3",
+    "tags": [
+      "Quarkus"
+    ],
+    "icon": "https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg",
+    "globalMemoryLimit": "2674Mi",
+    "links": {
+      "self": "/devfiles/quarkus-native/devfile.yaml"
+    }
   }
 ]
