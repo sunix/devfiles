@@ -1,5 +1,5 @@
 ---
-displayName: Quarkus Tools
-description: Quarkus Tools with OpenJDK 8 and Maven 3.6.3
-tags: ["Java", "Quarkus", "OpenJDK", "Maven", "Debian"]
+displayName: Quarkus Native
+description: Build and run hotspot or native Quarkus app
+tags: ["Java", "Quarkus", "OpenJDK", "Maven", "Native", "GraalVM"]
 icon: /images/quarkus.svg
