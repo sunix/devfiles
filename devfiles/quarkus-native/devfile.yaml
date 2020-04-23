@@ -7,7 +7,7 @@ projects:
     name: quarkus-quickstarts
     source:
       type: git
-      location: "https://github.com/sunix/quarkus-quickstarts.git"
+      location: "https://github.com/quarkusio/quarkus-quickstarts.git"
       sparseCheckoutDir: getting-started
 components:
 
@@ -55,7 +55,7 @@ commands:
     actions:
       - type: exec
         component: centos-quarkus-maven
-        command: mvn clean package
+        command: ./mvnw clean package
         workdir: '${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started'
 
 
@@ -63,14 +63,14 @@ commands:
     actions:
       - type: exec
         component: centos-quarkus-maven
-        command: mvn clean package -Dnative
+        command: ./mvnw clean package -Dnative
         workdir: '${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started'
 
   - name: Start Quarkus (DEVMODE Hot reload + debug)
     actions:
       - type: exec
         component: centos-quarkus-maven
-        command: 'mvn compile quarkus:dev'
+        command: './mvnw compile quarkus:dev'
         workdir: '${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started'
         
   - name: Start Quarkus (NATIVE)
