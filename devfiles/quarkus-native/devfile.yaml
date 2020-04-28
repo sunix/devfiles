@@ -51,7 +51,7 @@ components:
 
 commands:
 
-  - name: Package (HOTSPOT)
+  - name: Package
     actions:
       - type: exec
         component: centos-quarkus-maven
@@ -59,21 +59,21 @@ commands:
         workdir: '${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started'
 
 
-  - name: Package (NATIVE)
+  - name: Package Native
     actions:
       - type: exec
         component: centos-quarkus-maven
         command: ./mvnw clean package -Dnative
         workdir: '${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started'
 
-  - name: Start Quarkus (DEVMODE Hot reload + debug)
+  - name: Start Devmode (Hot reload + debug)
     actions:
       - type: exec
         component: centos-quarkus-maven
         command: './mvnw compile quarkus:dev'
         workdir: '${CHE_PROJECTS_ROOT}/quarkus-quickstarts/getting-started'
         
-  - name: Start Quarkus (NATIVE)
+  - name: Start Native
     actions:
       - type: exec
         component: ubi-quarkus-native-image
