@@ -39,7 +39,7 @@
   },
   {
     "displayName": "Quarkus Native",
-    "description": "Build and run hotspot or native Quarkus app"
+    "description": "Build and run hotspot or native Quarkus app",
     "tags": [
       "Quarkus"
     ],
@@ -47,6 +47,18 @@
     "globalMemoryLimit": "2674Mi",
     "links": {
       "self": "/devfiles/quarkus-native/devfile.yaml"
+    }
+  },
+  {
+    "displayName": "Quarkus - PostgreSQL",
+    "description": "Build and run hotspot or native Quarkus app, run it with PostgreSQL",
+    "tags": [
+      "Quarkus", "Postgresql"
+    ],
+    "icon": "https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg",
+    "globalMemoryLimit": "2674Mi",
+    "links": {
+      "self": "/devfiles/quarkus-postgresql/devfile.yaml"
     }
   }
 ]

@@ -1,0 +1,120 @@
+---
+apiVersion: 1.0.0
+metadata:
+  generateName: quarkus-postgres-
+projects:
+  -
+    name: quarkus-quickstarts
+    source:
+      type: git
+      location: "https://github.com/quarkusio/quarkus-quickstarts.git"
+      sparseCheckoutDir: hibernate-reactive-quickstart
+components:
+  -
+    type: chePlugin
+    id: redhat/quarkus-java11/latest
+  -
+    type: dockerimage
+    alias: centos-quarkus-maven
+    image: quay.io/eclipse/che-quarkus:nightly
+    env:
+      - name: JAVA_OPTS
+        value: "-XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10
+          -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90
+          -Dsun.zip.disableMemoryMapping=true -Xms20m -Djava.security.egd=file:/dev/./urandom
+          -Duser.home=/home/user"
+      - name: MAVEN_OPTS
+        value: $(JAVA_OPTS)  
+    memoryLimit: 4G
+    mountSources: true
+    volumes:
+      - name: m2
+        containerPath: /home/user/.m2
+    endpoints:
+      - name: 'eighty-eighty'
+        port: 8080
+
+  - type: dockerimage
+    alias: ubi-minimal
+    image: 'registry.access.redhat.com/ubi8/ubi-minimal'
+    memoryLimit: 32M
+    mountSources: true
+    endpoints:
+      - name: 'eighty-eighty'
+        port: 8080
+    command: ['tail']
+    args: ['-f', '/dev/null']
+
+  - memoryLimit: 512Mi
+    type: dockerimage
+    volumes:
+      - name: postgresql-data
+        containerPath: /var/lib/postgresql/data/
+    image: postgres
+    alias: postgres
+    env:
+      - value: quarkus_test
+        name: POSTGRES_USER
+      - value: quarkus_test
+        name: POSTGRES_PASSWORD
+      - value: quarkus_test
+        name: POSTGRES_DB
+
+
+
+commands:
+
+  - name: Package
+    actions:
+      -
+        type: exec
+        component: centos-quarkus-maven
+        command: "./mvnw package"
+        workdir: ${CHE_PROJECTS_ROOT}/quarkus-quickstarts/hibernate-reactive-quickstart
+
+  - name: Start Development mode (Hot reload + debug)
+    actions:
+      -
+        type: exec
+        component: centos-quarkus-maven
+        command: "./mvnw compile quarkus:dev"
+        workdir: ${CHE_PROJECTS_ROOT}/quarkus-quickstarts/hibernate-reactive-quickstart
+
+  - name: Package Native
+    actions:
+      -
+        type: exec
+        component: centos-quarkus-maven
+        command: "./mvnw package -Dnative -Dmaven.test.skip"
+        workdir: ${CHE_PROJECTS_ROOT}/quarkus-quickstarts/hibernate-reactive-quickstart
+
+  - name: Start Native
+    actions:
+      -
+        type: exec
+        component: ubi-minimal
+        command: ./getting-started-1.0-SNAPSHOT-runner
+        workdir: ${CHE_PROJECTS_ROOT}/quarkus-quickstarts/hibernate-reactive-quickstart/target
+
+  - name: Attach remote debugger
+    actions:
+    - type: vscode-launch
+      referenceContent: |
+        {
+          "version": "0.2.0",
+          "configurations": [
+            {
+              "type": "java",
+              "request": "attach",
+              "name": "Attach to Remote Quarkus App",
+              "hostName": "localhost",
+              "port": 5005
+            }
+          ]
+        }
+
+  - name: psql
+    actions:
+      - type: exec
+        command: psql -d quarkus_test -U quarkus_test
+        component: postgres
