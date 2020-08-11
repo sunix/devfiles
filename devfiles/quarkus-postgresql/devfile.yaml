@@ -49,7 +49,7 @@ components:
     type: dockerimage
     volumes:
       - name: postgresql-data
-        containerPath: /var/lib/postgresql/data/
+        containerPath: /var/lib/postgresql/
     image: postgres
     alias: postgres
     env:
