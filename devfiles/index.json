@@ -60,5 +60,16 @@
     "links": {
       "self": "/devfiles/quarkus-postgresql/devfile.yaml"
     }
-  }
+  },
+  {
+    "displayName": "Merge PDF files",
+    "description": "Merge your pdf files",
+    "tags": [
+      "pdftk"
+    ],
+    "icon": "https://www.eclipse.org/che/images/logo-eclipseche.svg",
+    "globalMemoryLimit": "2674Mi",
+    "links": {
+      "self": "/devfiles/merge-pdf/devfile.yaml"
+    }
 ]
