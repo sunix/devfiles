@@ -1,0 +1,9 @@
+---
+displayName: Merge pdfs
+description: Merge pdfs with pdftk
+tags: ["pdftk"]
+icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
+globalMemoryLimit: 2674Mi
+
+links:
+  self: /devfiles/merge-pdf/devfile.yaml
