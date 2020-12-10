@@ -47,10 +47,10 @@ components:
 
   - memoryLimit: 512Mi
     type: dockerimage
-    # not used because of chmod 700 in entrypoint that may fail in some volume class ...
+    # not used because of chmod 700 in entrypoint that may fail in some volume class ... though openshift 3 is requiring that
     volumes:
       - name: postgresql-data
-        containerPath: /var/lib/postgresql/
+        containerPath: /var/lib/postgresql/data
     image: postgres
     alias: postgres
     env:
