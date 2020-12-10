@@ -31,7 +31,7 @@ components:
       - name: m2
         containerPath: /home/user/.m2
     endpoints:
-      - name: 'eighty-eighty'
+      - name: 'eighty-eighty-java'
         port: 8080
 
   - type: dockerimage
@@ -40,19 +40,22 @@ components:
     memoryLimit: 32M
     mountSources: true
     endpoints:
-      - name: 'eighty-eighty'
+      - name: 'eighty-eighty-native'
         port: 8080
     command: ['tail']
     args: ['-f', '/dev/null']
 
   - memoryLimit: 512Mi
     type: dockerimage
+    # not used because of chmod 700 in entrypoint that may fail in some volume class ...
     volumes:
       - name: postgresql-data
         containerPath: /var/lib/postgresql/
     image: postgres
     alias: postgres
     env:
+      - name: PGDATA # workaround not using volume: chmod 700 in entrypoint that may fail in some volume class ... It will be ephemeral unfortunately
+        value: /tmp/pgdata
       - value: quarkus_test
         name: POSTGRES_USER
       - value: quarkus_test
