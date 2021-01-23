@@ -25,3 +25,13 @@ commands:
           very_large.ps && echo Done!
         component: sunix-mergepdf
         workdir: /projects/
+  - name: Convert images to PDF
+    actions:
+      - type: exec
+        command: >-
+          set -o xtrace;
+          for jpgfile in $(ls *.*g); do convert "$jpgfile"  "$jpgfile".pdf; done
+          && echo Done!
+        component: sunix-mergepdf
+        workdir: /projects/
+
