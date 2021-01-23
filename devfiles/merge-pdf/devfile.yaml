@@ -6,7 +6,7 @@ metadata:
 components:
   - alias: sunix-mergepdf
     type: dockerimage
-    image: sunix/mergepdf
+    image: quay.io/sunix/mergepdf
     memoryLimit: 512M
     mountSources: true
     command:
