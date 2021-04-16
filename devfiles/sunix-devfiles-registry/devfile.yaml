@@ -12,46 +12,76 @@ projects:
       type: git
       location: 'https://github.com/sunix/devfiles.git'
 
-  - name: devfile-registry
+  - name: che-devfile-registry
     source:
       type: git
       location: 'https://github.com/eclipse/che-devfile-registry'
 
 components:
+  - alias: che-devfile-registry-prod
+    image: 'quay.io/eclipse/che-devfile-registry:nightly'
+    mountSources: true
+    endpoints:
+      - name: http
+        port: 8080
+    command:
+      - sleep
+      - infinity
+    memoryLimit: 512Mi
+    type: dockerimage
+    volumes:
+      - name: images
+        containerPath: /usr/local/apache2/htdocs/images
+
+  - alias: dev
+    image: 'quay.io/eclipse/che-plugin-registry-dev:latest'
+    mountSources: true
+    memoryLimit: 1G
+    type: dockerimage
+
+  - id: redhat/vscode-xml/latest
+    type: chePlugin
 
   - id: redhat/vscode-yaml/latest
     type: chePlugin
 
-  - alias: git
-    image: sunix/git-devtools
-    type: dockerimage
-    memoryLimit: 64M
-    mountSources: true
-    args:
-      - sleep
-      - infinity
+  - id: eamodio/gitlens/latest
+    type: chePlugin
+    registryUrl: 'https://che-plugin-registry-main.surge.sh/v3'
 
-  - alias: devfile-registry-builder
-    image: 'quay.io/sunix/devfile-registry-builder:latest'
-    type: dockerimage
-    memoryLimit: 64M
-    mountSources: true
-  
+  - id: donjayamanne/githistory/latest
+    type: chePlugin
+    registryUrl: 'https://che-plugin-registry-main.surge.sh/v3'
+
+  - id: timonwong/shellcheck/latest
+    type: chePlugin
+    registryUrl: 'https://che-plugin-registry-main.surge.sh/v3'
+
+  - id: ms-vscode/vscode-github-pullrequest/latest
+    type: chePlugin
+
 commands:
 
-  - name: generate devfile index.json
+  - name: 1. build sunix devfile-registry
     actions:
-      - type: exec
-        command: |-
-                  /projects/devfile-registry/build/scripts/check_mandatory_fields.sh devfiles;
-                  /projects/devfile-registry/build/scripts/index.sh > devfiles/index.json;
-        component: devfile-registry-builder
-        workdir: /projects/sunix-devfiles
+      - workdir: '${CHE_PROJECTS_ROOT}/che-devfile-registry'
+        type: exec
+        command: DEVFILES_SRC=/projects/sunix-devfiles/devfiles ./build/dev/build-devfile-registry.sh
+        component: dev
 
-  - name: push to sunix devfile registry
+  - name: 2. start sunix devfile-registry
+    previewUrl:
+      port: 8080
+      path: /devfiles/
     actions:
-      - type: exec
-        # my github pages is not the root path
-        command: git subtree push --prefix devfiles origin gh-pages;
-        component: git
-        workdir: /projects/sunix-devfiles
+      - workdir: '${CHE_PROJECTS_ROOT}/che-devfile-registry'
+        type: exec
+        command: IMAGES_SRC=/projects/sunix-devfiles/images ./build/dev/start-devfile-registry.sh
+        component: che-devfile-registry-prod
+
+  - name: 3. publish sunix to surge.sh
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/che-devfile-registry/'
+        type: exec
+        command: IMAGES_SRC=/projects/sunix-devfiles/images ./build/dev/publish-devfile-registry-to-surge.sh
+        component: dev
