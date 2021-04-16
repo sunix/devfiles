@@ -3,3 +3,4 @@ displayName: Quarkus Postgresql
 description: Build and run hotspot or native Quarkus app with postgresql
 tags: ["Java", "Quarkus", "OpenJDK", "Maven", "Native", "GraalVM"]
 icon: /images/quarkus.svg
+globalMemoryLimit: 8Gi

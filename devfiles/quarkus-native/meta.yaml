@@ -1,5 +1,0 @@
----
-displayName: Quarkus Native
-description: Build and run hotspot or native Quarkus app
-tags: ["Java", "Quarkus", "OpenJDK", "Maven", "Native", "GraalVM"]
-icon: /images/quarkus.svg
