@@ -9,9 +9,8 @@ components:
     image: quay.io/sunix/mergepdf
     memoryLimit: 512M
     mountSources: true
-    command:
-      - tail
     args:
+      - tail
       - '-f'
       - /dev/null
 commands:
