@@ -1,0 +1,7 @@
+displayName: che-plugin-registry
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
+description: Devfile for https://github.com/eclipse-che/che-plugin-registry
+links:
+  self: /devfiles/eclipse-che-che-plugin-registry/devfile.yaml
