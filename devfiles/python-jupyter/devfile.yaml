@@ -1,0 +1,29 @@
+---
+apiVersion: 1.0.0
+metadata:
+  generateName: python-jupyter-
+projects:
+  - name: jupyter-hello-world1
+    source:
+      startPoint: master
+      location: 'https://github.com/chasbecker/TextAnalysis.git'
+      type: git
+components:
+  - id: ms-python/python/latest
+    registryUrl: 'https://sunix-che-plugin-registry-dev-i1viq.surge.sh/v3'
+    type: chePlugin
+  - mountSources: true
+    memoryLimit: 512Mi
+    type: dockerimage
+    volumes:
+      - name: venv
+        containerPath: /home/user/.venv
+    image: 'quay.io/eclipse/che-python-3.8:7.29.0'
+    alias: python
+commands:
+  - name: set up venv with requirements
+    actions:
+      - workdir: /home/user
+        type: exec
+        command: python -m venv .venv && . .venv/bin/activate && python -m pip install -r /projects/jupyter-hello-world1/requirements.txt
+        component: python

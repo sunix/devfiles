@@ -1,0 +1,90 @@
+metadata:
+  generateName: jh-pages-
+components:
+  - id: redhat/quarkus-java11/latest
+    type: chePlugin
+  - mountSources: true
+    endpoints:
+      - name: debug
+        port: 5005
+        attributes:
+          public: 'false'
+    memoryLimit: 4G
+    type: dockerimage
+    volumes:
+      - name: m2
+        containerPath: /home/user/.m2
+    image: 'quay.io/eclipse/che-quarkus:nightly'
+    alias: centos-quarkus-maven
+    env:
+      - value: >-
+          -XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20
+          -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true
+          -Xms20m -Djava.security.egd=file:/dev/./urandom -Duser.home=/home/user
+        name: JAVA_OPTS
+      - value: $(JAVA_OPTS)
+        name: MAVEN_OPTS
+  - mountSources: true
+    command:
+      - tail
+    args:
+      - '-f'
+      - /dev/null
+    memoryLimit: 32M
+    type: dockerimage
+    image: >-
+      registry.access.redhat.com/ubi8/ubi-minimal@sha256:fdfb0770bff33e0f97d78583efd68b546a19d0a4b0ac23eef25ef261bca3e975
+    alias: ubi-minimal
+apiVersion: 1.0.0
+commands:
+  - name: Package
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/jh-pages'
+        type: exec
+        command: mvn package
+        component: centos-quarkus-maven
+  - name: Start Development mode (Hot reload + debug)
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/jh-pages'
+        type: exec
+        command: >-
+          read -p 'Enter the program args [jh-pages]: ' name; name=${name:-'jh-pages'};
+          set -o xtrace; mvn compile quarkus:dev -Dquarkus.args="$name"
+        component: centos-quarkus-maven
+  - name: Package Native
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/jh-pages'
+        type: exec
+        command: >-
+          mvn package -Dnative -Dmaven.test.skip -Dquarkus.native.native-image-xmx=2G
+        component: centos-quarkus-maven
+  - name: Start Native
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/jh-pages/target'
+        type: exec
+        command: >-
+          read -p 'Enter the program args [jh-pages]: ' name; name=${name:-'Enter
+          the program args [jh-pages jh-pages]: '}; set -o xtrace; ./jh-pages-1.0.0-SNAPSHOT-runner
+          $name
+        component: ubi-minimal
+  - name: Attach remote debugger
+    actions:
+      - referenceContent: |
+          {
+            "version": "0.2.0",
+            "configurations": [
+              {
+                "type": "java",
+                "request": "attach",
+                "name": "Attach to Remote Quarkus App",
+                "hostName": "localhost",
+                "port": 5005
+              }
+            ]
+          }
+        type: vscode-launch
+projects:
+  - name: jh-pages
+    source:
+      location: https://github.com/jh-pages/jh-pages
+      type: github

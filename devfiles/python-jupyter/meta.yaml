@@ -1,0 +1,6 @@
+---
+displayName: Python Jupyter
+description: Python Stack with Python 3.8 and jupyter
+tags: ["Centos", "Python", "pip", "jupyter"]
+icon: /images/python.svg
+globalMemoryLimit: 1686Mi

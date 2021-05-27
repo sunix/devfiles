@@ -1,0 +1,7 @@
+displayName: jh-pages
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
+description: Devfile for https://github.com/jh-pages/jh-pages
+links:
+  self: /devfiles/jh-pages-jh-pages/devfile.yaml
