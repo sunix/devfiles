@@ -1,0 +1,7 @@
+displayName: crw-devfile-registry
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://raw.githubusercontent.com/redhat-developer/codeready-workspaces/crw-2-rhel-8/product/branding/CodeReady.png
+description: Devfile for https://github.com/redhat-developer/codeready-workspaces/tree/crw-2-rhel-8/dependencies/che-plugin-registry
+links:
+  self: /devfiles/crw-plugin-registry/devfile.yaml

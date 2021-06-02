@@ -1,0 +1,8 @@
+---
+displayName: VSCode Java in Che
+description: Code the VSCode Java extension in Che
+tags: ["Java", "Selfhosting"]
+icon: /images/java.svg
+globalMemoryLimit: 2674Mi
+links:
+  self: /devfiles/vscode-java/devfile.yaml

@@ -48,6 +48,7 @@ commands:
       - workdir: '${CHE_PROJECTS_ROOT}/jh-pages'
         type: exec
         command: >-
+          echo -n 'Enter your gh-token:'; read -s password; export MY_GH_TOKEN=$password;
           read -p 'Enter the program args [jh-pages]: ' name; name=${name:-'jh-pages'};
           set -o xtrace; mvn compile quarkus:dev -Dquarkus.args="$name"
         component: centos-quarkus-maven

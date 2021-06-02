@@ -1,0 +1,106 @@
+---
+apiVersion: 1.0.0
+metadata:
+  generateName: vscode-java-
+projects:
+  - name: vscode-java
+    source:
+      type: git
+      location: "https://github.com/redhat-developer/vscode-java"
+
+  - name: eclipse.jdt.ls
+    source:
+      type: git
+      location: "https://github.com/eclipse/eclipse.jdt.ls"
+
+components:
+
+  - alias: che-theia-next-prod
+    image: 'quay.io/eclipse/che-theia:next'
+    type: dockerimage
+    mountSources: true
+    command: ['tail', '-f', '/dev/null']
+    memoryLimit: 1Gi
+    env:
+      - name: THEIA_HOST
+        value: 0.0.0.0
+      - name: THEIA_PORT
+        value: '3130'
+      - name: NODE_TLS_REJECT_UNAUTHORIZED
+        value: '0'
+      - name: THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT
+        value: '2504'
+      - name: CHE_PROJECTS_ROOT
+        value: /tmp/theiadev_projects
+
+  - alias: npm-maven
+    image: 'quay.io/eclipse/che-nodejs8-centos:7.2.0'
+    type: dockerimage
+    mountSources: true
+    memoryLimit: 768Mi
+    volumes:
+      - name: m2
+        containerPath: /home/user/.m2
+
+  - alias: dev
+    image: 'quay.io/eclipse/che-theia-dev:next'
+    type: dockerimage
+    mountSources: true
+    memoryLimit: 3Gi
+
+
+  - id: redhat/vscode-yaml/latest
+    type: chePlugin
+  - id: che-incubator/typescript/latest
+    memoryLimit: 2048M
+    type: chePlugin
+  - id: github/vscode-pull-request-github/latest
+    type: chePlugin
+
+  - alias: javadev
+    id: redhat/javadev/latest
+    type: chePlugin
+    registryUrl: https://sunix-dev-che-plugin-registry.surge.sh/v3/
+
+commands:
+
+  - name: npm install and run build
+    actions:
+      - type: exec
+        command: >
+          npm install &&
+          npm run build &&
+          echo -e "\e[32mDone.\e[0m npm install and run build complete"
+        component: npm-maven
+        workdir: /projects/vscode-java
+
+  - name: package ... vscode extension
+    actions:
+      - workdir: /projects/vscode-java
+        type: exec
+        command: >
+          yes | vsce package &&
+          echo -e "\e[32mDone.\e[0m Packaging complete"
+        component: dev
+ 
+  - name: run ... HOSTED che-theia + detect remote vscode ext
+    previewUrl:
+      port: 3130
+    actions:
+      - workdir: /home/theia
+        type: exec
+        command: >
+          mkdir -p /tmp/theiadev_projects && export CHE_PROJECTS_ROOT=/tmp/theiadev_project && /entrypoint.sh
+        component: che-theia-next-prod
+
+  - name: run ... remote vscode ext
+    actions:
+      - workdir: /home/theia/
+        type: exec
+        command: >
+          export THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT='2504' &&
+          export THEIA_PLUGINS='local-dir:///projects/vscode-java/' &&
+          export THEIA_PLUGIN_ENDPOINT_PORT='10000' && 
+          /remote-endpoint/plugin-remote-endpoint
+        component: javadev
+
