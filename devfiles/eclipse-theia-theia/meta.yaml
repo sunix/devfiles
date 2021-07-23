@@ -1,0 +1,7 @@
+displayName: theia
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
+description: Devfile for https://github.com/eclipse-theia/theia
+links:
+  self: /devfiles/eclipse-theia-theia/devfile.yaml

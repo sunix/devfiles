@@ -1,0 +1,7 @@
+displayName: che-theia-linkless
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
+description: Devfile for https://github.com/eclipse-che/che-theia (linkless flaviour)
+links:
+  self: /devfiles/eclipse-che-che-theia-linkless/devfile.yaml

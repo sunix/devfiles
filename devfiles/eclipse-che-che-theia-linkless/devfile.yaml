@@ -1,0 +1,123 @@
+apiVersion: 1.0.0
+metadata:
+  generateName: che-theia-linklessbuild-
+projects:
+  - name: theia
+    source:
+      startPoint: master
+      location: 'https://github.com/eclipse-theia/theia'
+      type: git
+  - name: vscode-test-extension
+    source:
+      startPoint: master
+      location: 'https://github.com/RomanNikitenko/vscode-test-extension.git'
+      type: git
+    clonePath: test/vscode-test-extension
+  - name: che-theia
+    source:
+      location: 'https://github.com/eclipse-che/che-theia'
+      type: git
+components:
+  - alias: didact-plugin
+    type: chePlugin
+    id: redhat/vscode-didact/latest
+    preferences:
+      didact.openDefaultTutorialAtStartup: true
+      che.welcome.enable: false
+      didact.defaultUrl: /projects/che-theia/linkless-build.md
+    registryUrl: 'https://che-plugin-registry-main.surge.sh/v3'
+  - id: github/vscode-pull-request-github/latest
+    type: chePlugin
+  - id: redhat/vscode-yaml/latest
+    type: chePlugin
+  - id: ms-vscode/node-debug2/latest
+    type: chePlugin
+    alias: node-debug
+  - mountSources: true
+    endpoints:
+      - attributes:
+          protocol: http
+          public: 'true'
+        name: theia-dev-flow
+        port: 3010
+    memoryLimit: 5Gi
+    type: dockerimage
+    alias: che-dev
+    image: 'quay.io/eclipse/che-theia-dev:next'
+    env:
+      - value: 2504;
+        name: THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT
+  - mountSources: true
+    memoryLimit: 1Gi
+    type: dockerimage
+    alias: plugin-host
+    image: 'quay.io/eclipse/che-theia-dev:next'
+    env:
+      - value: 2504;
+        name: THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT
+      - value: 'local-dir:///projects/plugins1/'
+        name: THEIA_PLUGINS
+      - value: /projects/java-11-openjdk
+        name: JAVA_HOME
+  - id: eclipse/che-theia/next
+    memoryLimit: 1Gi
+    type: cheEditor
+    alias: theia-editor
+    env:
+      - value: '0'
+        name: NODE_TLS_REJECT_UNAUTHORIZED
+  - id: che-incubator/typescript/latest
+    memoryLimit: 2Gi
+    type: chePlugin
+  - id: redhat/java11/latest
+    type: chePlugin
+  - id: timonwong/shellcheck/latest
+    type: chePlugin
+commands:
+  - name: Run plugin host
+    actions:
+      - workdir: /projects/theia/che/che-theia/extensions/eclipse-che-theia-plugin-remote/lib/node
+        type: exec
+        command: node plugin-remote.js
+        component: plugin-host
+  - name: Debug plugin host
+    actions:
+      - workdir: /projects/theia/che/che-theia/extensions/eclipse-che-theia-plugin-remote/lib/node
+        type: exec
+        command: node --inspect-brk=8888 plugin-remote.js
+        component: plugin-host
+  - name: Run back end
+    actions:
+      - workdir: /projects/theia/examples/assembly
+        type: exec
+        command: 'yarn run start --hostname=0.0.0.0 --port=3010 --plugins=local-dir:/projects/theia/plugins'
+        component: che-dev
+  - name: Debug back end
+    actions:
+      - workdir: /projects/theia/examples/assembly
+        type: exec
+        command: 'yarn run start --inspect-brk=9999 --hostname=0.0.0.0 --port=3010 --plugins=local-dir:/projects/theia/plugins'
+        component: che-dev
+  - name: Debug Configs
+    actions:
+      - referenceContent: |
+          {
+            "name": "Attach to Plugin Host",
+            "type": "node",
+            "request": "attach",
+            "port": 8888,
+            "outFiles": [
+                "/projects/theia/packages/**/*.js",
+                "/projects/theia/che/che-theia/exensions/**/*.js"
+            ]
+          }, {
+            "name": "Attach to Back End",
+            "type": "node",
+            "request": "attach",
+            "port": 9999,
+            "outFiles": [
+                "/projects/theia/packages/**/*.js"
+                "/projects/theia/examples/**/*.js"
+            ]
+          }
+        type: vscode-launch
