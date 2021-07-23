@@ -1,21 +1,36 @@
+apiVersion: 1.0.0
 metadata:
   generateName: jh-pages-
 components:
+  - id: eamodio/gitlens/latest
+    type: chePlugin
+  - id: github/vscode-pull-request-github/latest
+    type: chePlugin
+  - id: donjayamanne/githistory/latest
+    type: chePlugin
   - id: redhat/quarkus-java11/latest
     type: chePlugin
-  - mountSources: true
+  - alias: git
+    image: sunix/git-devtools
+    mountSources: true
+    args:
+      - sleep
+      - infinity
+    memoryLimit: 64M
+    type: dockerimage
+  - alias: centos-quarkus-maven
+    image: 'quay.io/eclipse/che-quarkus:nightly'
+    type: dockerimage
+    mountSources: true
+    memoryLimit: 4G
     endpoints:
       - name: debug
         port: 5005
         attributes:
           public: 'false'
-    memoryLimit: 4G
-    type: dockerimage
     volumes:
       - name: m2
         containerPath: /home/user/.m2
-    image: 'quay.io/eclipse/che-quarkus:nightly'
-    alias: centos-quarkus-maven
     env:
       - value: >-
           -XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20
@@ -24,18 +39,17 @@ components:
         name: JAVA_OPTS
       - value: $(JAVA_OPTS)
         name: MAVEN_OPTS
-  - mountSources: true
+  - alias: ubi-minimal
+    image: >-
+      registry.access.redhat.com/ubi8/ubi-minimal@sha256:fdfb0770bff33e0f97d78583efd68b546a19d0a4b0ac23eef25ef261bca3e975
+    type: dockerimage
+    mountSources: true
     command:
       - tail
     args:
       - '-f'
       - /dev/null
     memoryLimit: 32M
-    type: dockerimage
-    image: >-
-      registry.access.redhat.com/ubi8/ubi-minimal@sha256:fdfb0770bff33e0f97d78583efd68b546a19d0a4b0ac23eef25ef261bca3e975
-    alias: ubi-minimal
-apiVersion: 1.0.0
 commands:
   - name: Package
     actions:
@@ -47,10 +61,7 @@ commands:
     actions:
       - workdir: '${CHE_PROJECTS_ROOT}/jh-pages'
         type: exec
-        command: >-
-          echo -n 'Enter your gh-token:'; read -s password; export MY_GH_TOKEN=$password;
-          read -p 'Enter the program args [jh-pages]: ' name; name=${name:-'jh-pages'};
-          set -o xtrace; mvn compile quarkus:dev -Dquarkus.args="$name"
+        command: ./dev/start-dev-mode.sh
         component: centos-quarkus-maven
   - name: Package Native
     actions:
