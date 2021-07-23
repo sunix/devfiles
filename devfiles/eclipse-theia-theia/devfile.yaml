@@ -6,10 +6,6 @@ projects:
     source:
       type: git
       location: "https://github.com/eclipse-theia/theia.git"
-  - name: theia
-    source:
-      location: https://github.com/eclipse-theia/theia
-      type: github
 components:
   - alias: che-dev
     type: dockerimage
