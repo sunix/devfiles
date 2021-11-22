@@ -19,10 +19,15 @@ components:
     memoryLimit: 64M
     type: dockerimage
   - alias: centos-quarkus-maven
-    image: 'quay.io/eclipse/che-quarkus:nightly'
+    image: 'quay.io/quarkus/centos-quarkus-maven:21.1.0-java11'
     type: dockerimage
     mountSources: true
     memoryLimit: 4G
+    command:
+      - tail
+    args:
+      - '-f'
+      - /dev/null
     endpoints:
       - name: debug
         port: 5005
@@ -31,6 +36,8 @@ components:
     volumes:
       - name: m2
         containerPath: /home/user/.m2
+      - name: dotconfig
+        containerPath: /home/user/.config
     env:
       - value: >-
           -XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20
@@ -56,6 +63,12 @@ commands:
       - workdir: '${CHE_PROJECTS_ROOT}/jh-pages'
         type: exec
         command: mvn package
+        component: centos-quarkus-maven
+  - name: Run Quarkus continuous test
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/jh-pages'
+        type: exec
+        command: 'mvn quarkus:test'
         component: centos-quarkus-maven
   - name: Start Development mode (Hot reload + debug)
     actions:

@@ -1,0 +1,75 @@
+metadata:
+  name: sunix-che-devfile-registry
+projects:
+  - name: che-devfile-registry
+    source:
+      location: 'https://github.com/eclipse-che/che-devfile-registry.git'
+      type: github
+  - name: sunix-devfiles
+    source:
+      location: 'https://github.com/sunix/devfiles'
+      type: github
+components:
+  - mountSources: true
+    endpoints:
+      - name: http
+        port: 8080
+    command:
+      - sleep
+      - infinity
+    memoryLimit: 512Mi
+    type: dockerimage
+    volumes:
+      - name: images
+        containerPath: /usr/local/apache2/htdocs/images
+    image: 'quay.io/eclipse/che-devfile-registry:nightly'
+    alias: che-devfile-registry-prod
+  - mountSources: true
+    memoryLimit: 1G
+    type: dockerimage
+    image: 'quay.io/eclipse/che-plugin-registry-dev:latest'
+    alias: dev
+  - id: redhat/vscode-xml/latest
+    type: chePlugin
+  - id: redhat/vscode-yaml/latest
+    type: chePlugin
+  - id: eamodio/gitlens/latest
+    registryUrl: 'https://che-plugin-registry-main.surge.sh/v3'
+    type: chePlugin
+  - id: donjayamanne/githistory/latest
+    registryUrl: 'https://che-plugin-registry-main.surge.sh/v3'
+    type: chePlugin
+  - id: timonwong/shellcheck/latest
+    registryUrl: 'https://che-plugin-registry-main.surge.sh/v3'
+    type: chePlugin
+  - id: ms-vscode/vscode-github-pullrequest/latest
+    type: chePlugin
+apiVersion: 1.0.0
+commands:
+  - name: 1. build devfile-registry
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/che-devfile-registry'
+        type: exec
+        command: >-
+          DEVFILES_SRC=/projects/sunix-devfiles/devfiles
+          ./build/dev/build-devfile-registry.sh
+        component: dev
+  - name: 2. start devfile-registry
+    previewUrl:
+      port: 8080
+      path: /devfiles/
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/che-devfile-registry'
+        type: exec
+        command: >-
+          IMAGES_SRC=/projects/sunix-devfiles/images
+          ./build/dev/start-devfile-registry.sh
+        component: che-devfile-registry-prod
+  - name: 3. publish to surge.sh
+    actions:
+      - workdir: '${CHE_PROJECTS_ROOT}/che-devfile-registry/'
+        type: exec
+        command: >-
+          IMAGES_SRC=/projects/sunix-devfiles/images
+          ./build/dev/publish-devfile-registry-to-surge.sh
+        component: dev

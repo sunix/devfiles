@@ -1,0 +1,9 @@
+---
+displayName: CodeReady Workspaces devfile-registry
+description: Devfile for CodeReady Workspaces devfile-registry
+tags: ["Devfiles"]
+icon: https://raw.githubusercontent.com/redhat-developer/codeready-workspaces/crw-2-rhel-8/product/branding/CodeReady.png
+globalMemoryLimit: 2674Mi
+
+links:
+  self: /devfiles/crw-devfile-registry/devfile.yaml
