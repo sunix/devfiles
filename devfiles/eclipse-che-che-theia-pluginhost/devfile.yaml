@@ -1,0 +1,150 @@
+apiVersion: 1.0.0
+metadata:
+  generateName: chetheia-pluginhost-
+projects:
+  - name: che-theia
+    source:
+      location: 'https://github.com/eclipse-che/che-theia.git'
+      type: git
+      branch: main
+  - name: rhamt-vscode-extension
+    source:
+      type: git
+      location: https://github.com/windup/rhamt-vscode-extension
+
+components:
+
+  - id: vscode/typescript-language-features/latest
+    memoryLimit: 768Mi
+    type: chePlugin
+
+  - id: redhat/vscode-yaml/latest
+    type: chePlugin
+
+  - mountSources: true
+    memoryLimit: 2Gi
+    type: dockerimage
+    alias: dev
+    image: 'quay.io/eclipse/che-theia-dev:next'
+
+
+
+  - mountSources: true
+    memoryLimit: 1Gi
+    type: dockerimage
+    alias: plugin-host
+    image: 'quay.io/windupeng/mta-vscode-extension'
+    command: [tail,'-f', /dev/null]
+    env:
+      - value: 2504;
+        name: THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT
+      - value: 'local-dir:///projects/rhamt-vscode-extension/'
+        name: THEIA_PLUGINS
+    endpoints:
+      - name: mta1
+        port: 61435
+      - name: mta2
+        port: 61436
+    volumes:
+      - name: rhamt-vscode
+        containerPath: "/home/theia/mta/redhat.mta-vscode-extension"
+
+
+  - id: donjayamanne/githistory/latest
+    type: chePlugin
+  - id: eamodio/gitlens/latest
+    type: chePlugin
+
+
+
+  - mountSources: true
+    command: [tail,'-f', /dev/null]
+    memoryLimit: 1Gi
+    type: dockerimage
+    alias: che-theia-next-prod
+    image: 'quay.io/eclipse/che-theia:next'
+    env:
+      - value: 0.0.0.0
+        name: THEIA_HOST
+      - value: '3130'
+        name: THEIA_PORT
+      - value: '0'
+        name: NODE_TLS_REJECT_UNAUTHORIZED
+      - value: 2504;
+        name: THEIA_PLUGIN_ENDPOINT_DISCOVERY_PORT
+
+commands:
+  - name: Run plugin host
+    actions:
+      - workdir: /projects/che-theia/extensions/eclipse-che-theia-plugin-remote/lib/node
+        type: exec
+        command: node plugin-remote.js
+        component: plugin-host
+  - name: Debug plugin host
+    actions:
+      - workdir: /projects/che-theia/extensions/eclipse-che-theia-plugin-remote/lib/node
+        type: exec
+        command: node --inspect-brk=8888 plugin-remote.js
+        component: plugin-host
+  - name: build ... current yarn project
+    actions:
+      - workdir: '${fileDirname}'
+        type: exec
+        command: |
+          echo "build from ${fileDirname}" && killall node;
+          yarn --ignore-scripts && yarn lint:fix && yarn format:fix && yarn && echo -e "\e[32mDone build from folder ${fileDirname}\e[0m"
+        component: dev
+
+  - name: build ... vscode-plugin
+    actions:
+      - workdir: '${fileDirname}'
+        type: exec
+        command: |
+          echo "build vscodeplugin from ${fileDirname}" && killall node;
+          npm install --unsafe-perm=true --allow-root &&
+          vsce package && echo -e "\e[32mDone build from folder ${fileDirname}\e[0m"
+        component: dev
+
+  - name: build (skipchecks) ... current yarn project
+    actions:
+      - workdir: '${fileDirname}'
+        type: exec
+        command: |
+          echo "build from ${fileDirname}" && killall node;
+          export SKIP_FORMAT=true SKIP_LINT=true SKIP_TEST=true;
+          yarn && echo -e "\e[32mDone build from folder ${fileDirname}\e[0m"
+        component: dev
+  - name: test-watch ... current yarn project
+    actions:
+      - workdir: '${fileDirname}'
+        type: exec
+        command: |
+          echo "yarn test:watch from ${fileDirname}" && killall node; yarn test:watch
+        component: dev
+  - name: build current plugin ... and run with che-theia
+    actions:
+      - workdir: '${fileDirname}'
+        type: exec
+        command: |
+          project_folder=$PWD
+          while [ ! -e "$project_folder/package.json" ]; do
+            project_folder=${project_folder%/*}
+            if [ "$project_folder" = "" ]; then
+              echo "Could not detect any 'package.json' file from `${PWD}`. Please open any file from your plugin project.";
+              exit 1;
+            fi
+          done
+          SKIP_TEST=true SKIP_FORMAT=true SKIP_LINT=true yarn --cwd=$project_folder
+          if [ ! 0 -lt $(ls $project_folder/*.theia 2>/dev/null | wc -w) ]; then
+            echo "Could not find any '.theia' files in ${project_folder}. Maybe try to open any file from your plugin project.";
+            exit 1;
+          fi
+          mkdir -p /projects/theiadev_projects && export CHE_PROJECTS_ROOT=/projects/theiadev_projects && cp "$project_folder"/*.theia /default-theia-plugins/ && /entrypoint.sh
+        component: che-theia-next-prod
+  - name: run che-theia
+    actions:
+      - workdir: '${fileDirname}'
+        type: exec
+        command: |
+          mkdir -p /projects/theiadev_projects && export CHE_PROJECTS_ROOT=/projects/theiadev_projects && /entrypoint.sh
+        component: che-theia-next-prod

@@ -9,7 +9,7 @@ projects:
 components:
   - alias: che-dev
     type: dockerimage
-    image: "quay.io/eclipse/che-theia-dev:next"
+    image: "quay.io/sunix/che-theia-dev:jupyter"
     mountSources: true
     endpoints:
       - name: "theia-dev-flow"

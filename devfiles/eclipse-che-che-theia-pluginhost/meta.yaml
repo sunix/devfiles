@@ -1,0 +1,7 @@
+displayName: che-theia pluginhost
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://www.eclipse.org/che/images/logo-eclipseche.svg
+description: pluginhost version of devfile for https://github.com/eclipse-che/che-theia
+links:
+  self: /devfiles/eclipse-che-che-theia-pluginhost/devfile.yaml
