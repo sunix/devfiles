@@ -1,0 +1,7 @@
+displayName: jkube
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://github.com/eclipse/jkube/raw/master/media/JKube-Logo-final-stacked-color.svg
+description: Devfile for https://github.com/eclipse/jkube
+links:
+  self: /devfiles/eclipse-jkube/devfile.yaml
