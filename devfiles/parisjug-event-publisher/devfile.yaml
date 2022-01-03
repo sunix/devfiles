@@ -1,0 +1,92 @@
+apiVersion: 1.0.0
+metadata:
+  generateName: event-publisher-
+components:
+  - type: chePlugin
+    id: redhat/quarkus-java11/latest
+  - type: dockerimage
+    alias: centos-quarkus-maven
+    image: quay.io/eclipse/che-quarkus:next
+    env:
+      - name: JAVA_OPTS
+        value: "-XX:MaxRAMPercentage=50.0 -XX:+UseParallelGC -XX:MinHeapFreeRatio=10\
+          \ -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90\
+          \ -Dsun.zip.disableMemoryMapping=true -Xms20m -Djava.security.egd=file:/dev/./urandom\
+          \ -Duser.home=/home/user"
+      - name: MAVEN_OPTS
+        value: $(JAVA_OPTS)
+    memoryLimit: 3G
+    mountSources: true
+    volumes:
+      - name: m2
+        containerPath: /home/user/.m2
+  - type: dockerimage
+    alias: ubi-minimal
+    image: 'registry.access.redhat.com/ubi8/ubi-minimal'
+    memoryLimit: 32M
+    mountSources: true
+    command: ['tail']
+    args: ['-f', '/dev/null']
+  - mountSources: true
+    memoryLimit: 256M
+    type: dockerimage
+    image: sunix/git-devtools
+    alias: git
+  - id: ms-vscode/vscode-github-pullrequest/latest
+    type: chePlugin
+commands:
+  - name: Package
+    actions:
+      - type: exec
+        component: centos-quarkus-maven
+        command: "mvn package"
+        workdir: ${CHE_PROJECTS_ROOT}/event-publisher
+  - name: Start Development mode (Hot reload + debug)
+    actions:
+      - type: exec
+        component: centos-quarkus-maven
+        command: >-
+          echo Enter the command arguments; read arguments; set -o xtrace; mvn compile
+          quarkus:dev -Dquarkus.args="$arguments"
+        workdir: ${CHE_PROJECTS_ROOT}/event-publisher
+  - name: Package Native
+    actions:
+      - type: exec
+        component: centos-quarkus-maven
+        command: "mvn package -Dnative -Dmaven.test.skip"
+        workdir: ${CHE_PROJECTS_ROOT}/event-publisher
+  - name: Package Native (native-image-xmx=2G)
+    actions:
+      - type: exec
+        component: centos-quarkus-maven
+        command: "mvn package -Dnative -Dmaven.test.skip -Dquarkus.native.native-image-xmx=2G"
+        workdir: ${CHE_PROJECTS_ROOT}/event-publisher
+  - name: Start Native
+    actions:
+      - type: exec
+        component: ubi-minimal
+        command: >-
+          echo Enter the command arguments; read arguments; set -o xtrace; ./parisjug-event-publisher
+          $arguments
+        workdir: ${CHE_PROJECTS_ROOT}/event-publisher/target
+  - name: Attach remote debugger
+    actions:
+      - type: vscode-launch
+        referenceContent: |
+          {
+            "version": "0.2.0",
+            "configurations": [
+              {
+                "type": "java",
+                "request": "attach",
+                "name": "Attach to Remote Quarkus App",
+                "hostName": "localhost",
+                "port": 5005
+              }
+            ]
+          }
+projects:
+  - name: event-publisher
+    source:
+      location: https://github.com/parisjug/event-publisher
+      type: github

@@ -1,0 +1,7 @@
+displayName: event-publisher
+tags: github
+globalMemoryLimit: 7Gi
+icon: https://avatars.githubusercontent.com/u/1183249?s=200&v=4
+description: Devfile for https://github.com/parisjug/event-publisher
+links:
+  self: /devfiles/parisjug-event-publisher/devfile.yaml
